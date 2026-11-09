@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 2,
+  "dbVersion": 1,
+  "publishedAt": "2026-11-09T12:00:00Z",
+  "minAppVersion": "1.2.0",
+  "file": "packages.json",
+  "size": 47665,
+  "sha256": "b3330eb0472e08252b9fcc45ea725ffadf6fa9450eaa6e6a303e4f72ba8da1d8",
+  "counts": {
+    "SAFE": 24,
+    "CAUTION": 32,
+    "PROTECTED": 42
+  }
+}
