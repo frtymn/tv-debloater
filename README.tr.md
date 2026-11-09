@@ -1,7 +1,7 @@
 <p align="center"><a href="README.md">English</a> | <b>Türkçe</b></p>
 
 <p align="center">
-  <img src="docs/social-preview.png" alt="TV Debloater: Android TV cihazını telefonundan sadeleştir. Root yok. Bilgisayar yok. Geri alınabilir." width="100%">
+  <img src="docs/social-preview-tr.png" alt="TV Debloater: Android TV'nizi telefonunuzdan sadeleştirin. Root yok. Bilgisayar yok. Geri alınabilir." width="100%">
 </p>
 
 # TV Debloater
