@@ -30,10 +30,16 @@ To propose a change without writing code, open a **Package safety report** issue
 1. Fork the repository and create a branch.
 2. Keep changes small and focused.
 3. Run the unit tests: `./gradlew testDebugUnitTest`.
-4. Open a pull request and fill in the template.
+4. Run the repository checks: `python3 tools/repo_checks.py`. They check README images and links, that both string files have the same keys, and that every permission is explained in the READMEs.
+5. Open a pull request and fill in the template.
 
 GitHub Actions builds the APK and runs the tests on every push and pull request.
 You do not need a computer: you can edit files and open pull requests in the GitHub web interface.
+
+## Releases
+
+Before every tag, the maintainer runs the full audit in [docs/AUDIT.md](docs/AUDIT.md) and adds an entry there.
+A tag `vX.Y.Z` needs `docs/release-notes/vX.Y.Z.md`; CI refuses the release if the tag, the APK version and the newest release notes do not match.
 
 ## What we will not accept
 

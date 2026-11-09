@@ -51,6 +51,11 @@ You choose what to disable, and every change can be undone. You need no root and
 4. **Review.** Tap "Light profile", check the list, and tap "Disable". With dry run on, you only see the commands.
 5. **Apply.** Turn dry run off in Settings, run the batch again, and restart the TV yourself after about a minute.
 
+### Updates
+
+Download the new APK from [Releases](https://github.com/frtymn/tv-debloater/releases/latest) and install it over the old one. Your history and saved devices stay.
+Releases from v0.1.0 on are signed with the same debug key. If Android refuses the update of an older build, uninstall it first. Uninstalling deletes the app's history, so export it first (History > Export).
+
 ## Screenshots
 
 Screenshots are rendered with sample data.
@@ -101,17 +106,30 @@ Android 11+ "Wireless debugging" with pairing codes is not supported yet.
 ## Troubleshooting
 
 - **"Connection refused".** USB debugging is off, or the TV does not accept network ADB. Turn on USB debugging (and Network debugging if present).
-- **"Timed out" or "unreachable".** Check the IP address. The phone and the TV must be on the same Wi-Fi network. Try "Scan network".
+- **"Timed out" or "unreachable".** Check the IP address. The phone and the TV must be on the same Wi-Fi network. Try "Scan network for port 5555".
 - **"Not authorized".** Look at the TV: accept "Allow USB debugging?". If you declined, reconnect to see the prompt again.
 - **Changes come back after a restart.** Wait about a minute after the last change, then restart the TV.
 - **Something stopped working.** Undo the last batch in History, then restart the TV.
 - **The TV does not start.** Factory reset it, as described in [Safety](#safety).
 
+## Privacy and permissions
+
+The app collects no data. It has no ads, no analytics and no account.
+It only connects to your local network: to the TV address you choose, and, when you tap "Scan network", to the ADB port (5555 by default) of the addresses in your phone's Wi-Fi subnet (/24).
+History, saved devices and the app's ADB key stay in the app's private storage on your phone. Export and share happen only when you tap them.
+
+Permissions in the manifest:
+
+- `INTERNET`: needed for any network socket, here only ADB over TCP to the TV and the optional scan.
+- `ACCESS_NETWORK_STATE`: reads the phone's own Wi-Fi address so the scan knows which subnet to check.
+
+v0.1.0 also declares `ACCESS_WIFI_STATE`, which it does not use. It is removed in the next release.
+
 ## Disclaimer
 
 Use at your own risk. TV Debloater is not affiliated with or endorsed by Xiaomi, Google, or the Android project.
 Android, Android TV, Google TV and Xiaomi are trademarks of their owners.
-The app collects no data. It has no ads and no analytics, and it only talks to the TV address you enter on your local network.
+The app collects no data. See [Privacy and permissions](#privacy-and-permissions).
 
 ## Build from source
 
@@ -124,7 +142,7 @@ You need JDK 17. The Gradle wrapper downloads everything else.
 The APK is in `app/build/outputs/apk/debug/`.
 No computer? Fork the repository: GitHub Actions builds the APK on every push and keeps it as a downloadable artifact.
 
-- `build.yml`: unit tests, a secret scan, and the debug APK. Tags like `v0.1.0` make a GitHub Release.
+- `build.yml`: repository checks (`tools/repo_checks.py`), unit tests, a secret scan, and the debug APK. Tags like `v0.1.0` make a GitHub Release.
 - `e2e.yml`: drives the real app against an Android TV 9 emulator.
 - `docs-images.yml`: renders the screenshots, hero image and social preview. Run it from the Actions tab.
 

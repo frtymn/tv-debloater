@@ -21,7 +21,7 @@ In scope:
 
 - The app sending a command for a package it should refuse (for example a protected package).
 - Commands that differ from what the confirmation dialog showed.
-- The app talking to anything other than the TV address you entered, or to the internet.
+- The app talking to anything other than the TV address you entered (or, during "Scan network", the ADB port of addresses in your own Wi-Fi subnet), or to the internet.
 - Leaks of the app's ADB private key (stored in app-private storage).
 
 Out of scope:

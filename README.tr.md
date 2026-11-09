@@ -51,6 +51,11 @@ Neyi kapatacağınızı siz seçersiniz ve her değişiklik geri alınabilir. Ro
 4. **Gözden geçirin.** "Hafif profil"e dokunun, listeyi kontrol edin ve "Devre dışı bırak"a basın. Deneme modu açıkken yalnızca komutları görürsünüz.
 5. **Uygulayın.** Ayarlar'dan deneme modunu kapatın, işlemi tekrar çalıştırın ve yaklaşık bir dakika sonra TV'yi kendiniz yeniden başlatın.
 
+### Güncellemeler
+
+Yeni APK'yı [Sürümler](https://github.com/frtymn/tv-debloater/releases/latest) sayfasından indirip eskisinin üzerine kurun. Geçmişiniz ve kayıtlı cihazlarınız korunur.
+v0.1.0 ve sonraki sürümler aynı debug anahtarıyla imzalanır. Android daha eski bir sürümün güncellenmesini reddederse önce onu kaldırın. Kaldırmak uygulamanın geçmişini siler, bu yüzden önce dışa aktarın (Geçmiş > Dışa aktar).
+
 ## Ekran görüntüleri
 
 Ekran görüntüleri örnek verilerle oluşturulmuştur.
@@ -95,23 +100,36 @@ Android 11+ ile gelen eşleştirme kodlu "Kablosuz hata ayıklama" henüz destek
 - **GÜVENLİ için kanıt gerekir.** Bir paket, yalnızca Mi TV Stick için yayınlanmış debloat listeleri onu kapatıyorsa GÜVENLİ sayılır. Her girdi kaynaklarını gösterir.
 - **Siz onaylamadan hiçbir şey çalışmaz.** Deneme modu ilk açılışta açıktır ve her işlem grubu, komutların tamamını listeleyen bir onay penceresi gösterir.
 - **Önce yedek.** Geçmiş kaydı ilk komut çalışmadan önce kaydedilir.
-- **Nasıl geri alınır.** Geçmiş > "Tümünü geri al" ya da menüdeki "Tümünü geri yükle". Sonra TV'yi yeniden başlatın.
+- **Nasıl geri alınır.** Geçmiş > "İşlemi geri al" ya da menüdeki "Tümünü geri yükle". Sonra TV'yi yeniden başlatın.
 - **Son çare.** Fabrika ayarlarına sıfırlama tüm sistem uygulamalarını geri getirir. Hesaplarınızı ve kurduğunuz uygulamaları da siler. Ayarlar > Cihaz Tercihleri > Sıfırla'yı kullanın. Menü açılmıyorsa çubuğun gücünü çekin, kumandada OK + Geri tuşlarını basılı tutarak gücü yeniden takın ve "Wipe data / factory reset"i seçin ([Xiaomi destek](https://www.mi.com/uk/support/faq/details/KA-557214/)).
 
 ## Sorun giderme
 
 - **"Bağlantı reddedildi".** USB hata ayıklama kapalı ya da TV ağ üzerinden ADB kabul etmiyor. USB hata ayıklamayı (varsa Ağ üzerinden hata ayıklamayı da) açın.
-- **"Zaman aşımı" veya "ulaşılamıyor".** IP adresini kontrol edin. Telefon ve TV aynı Wi-Fi ağında olmalı. "Ağda tara"yı deneyin.
+- **"Zaman aşımı" veya "ulaşılamıyor".** IP adresini kontrol edin. Telefon ve TV aynı Wi-Fi ağında olmalı. "Ağda 5555 portunu tara"yı deneyin.
 - **"Yetkisiz".** TV'ye bakın ve "USB hata ayıklamaya izin verilsin mi?" sorusunu onaylayın. Reddettiyseniz soruyu tekrar görmek için yeniden bağlanın.
 - **Değişiklikler yeniden başlatınca geri geliyor.** Son değişiklikten sonra yaklaşık bir dakika bekleyin, sonra TV'yi yeniden başlatın.
 - **Bir şey çalışmayı bıraktı.** Geçmiş'ten son işlem grubunu geri alın, sonra TV'yi yeniden başlatın.
 - **TV açılmıyor.** [Güvenlik](#güvenlik) bölümünde anlatıldığı gibi fabrika ayarlarına sıfırlayın.
 
+## Gizlilik ve izinler
+
+Uygulama hiçbir veri toplamaz. Reklam, analitik ve hesap yoktur.
+Yalnızca yerel ağınıza bağlanır: seçtiğiniz TV adresine ve "Ağda 5555 portunu tara"ya dokunduğunuzda telefonun Wi-Fi alt ağındaki (/24) adreslerin ADB portuna (varsayılan 5555).
+Geçmiş, kayıtlı cihazlar ve uygulamanın ADB anahtarı telefonunuzda, uygulamanın özel depolama alanında kalır. Dışa aktarma ve paylaşma yalnızca siz dokunduğunuzda olur.
+
+Manifest'teki izinler:
+
+- `INTERNET`: her ağ bağlantısı için gerekir; burada yalnızca TV'ye TCP üzerinden ADB ve isteğe bağlı tarama için kullanılır.
+- `ACCESS_NETWORK_STATE`: taramanın hangi alt ağa bakacağını bilmesi için telefonun kendi Wi-Fi adresini okur.
+
+v0.1.0 ayrıca kullanmadığı `ACCESS_WIFI_STATE` iznini de bildirir. Bu izin bir sonraki sürümde kaldırılıyor.
+
 ## Sorumluluk reddi
 
 Kullanım riski size aittir. TV Debloater; Xiaomi, Google veya Android projesiyle bağlantılı değildir ve onlar tarafından onaylanmamıştır.
 Android, Android TV, Google TV ve Xiaomi, sahiplerinin ticari markalarıdır.
-Uygulama hiçbir veri toplamaz. Reklam ve analitik içermez, yalnızca yerel ağınızda girdiğiniz TV adresiyle konuşur.
+Uygulama hiçbir veri toplamaz. Ayrıntılar: [Gizlilik ve izinler](#gizlilik-ve-izinler).
 
 ## Kaynaktan derleme
 
@@ -124,7 +142,7 @@ JDK 17 gerekir. Gradle wrapper geri kalan her şeyi indirir.
 APK `app/build/outputs/apk/debug/` klasörüne çıkar.
 Bilgisayarınız yok mu? Depoyu fork'layın: GitHub Actions her push'ta APK'yı derler ve indirilebilir bir artifact olarak saklar.
 
-- `build.yml`: birim testleri, gizli bilgi taraması ve debug APK. `v0.1.0` gibi etiketler bir GitHub Release oluşturur.
+- `build.yml`: depo kontrolleri (`tools/repo_checks.py`), birim testleri, gizli bilgi taraması ve debug APK. `v0.1.0` gibi etiketler bir GitHub Release oluşturur.
 - `e2e.yml`: gerçek uygulamayı bir Android TV 9 emülatörüne karşı çalıştırır.
 - `docs-images.yml`: ekran görüntülerini, kapak görselini ve sosyal önizlemeyi üretir. Actions sekmesinden çalıştırın.
 

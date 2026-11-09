@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="ok">Tamam</string>
     <string name="cancel">İptal</string>
-    <string name="close">Kapat</string>
     <string name="retry">Tekrar dene</string>
     <string name="back">Geri</string>
-    <string name="next">İleri</string>
     <string name="done">Bitti</string>
 
     <string name="onb_title">TV\'yi hazırlayın</string>
@@ -121,7 +118,7 @@
     <string name="fatal_error">Durdu: %1$s</string>
 
     <string name="history_empty">Henüz değişiklik yok. Her gerçek işlem çalışmadan önce buraya kaydedilir.</string>
-    <string name="undo_batch">Tümünü geri al</string>
+    <string name="undo_batch">İşlemi geri al</string>
     <string name="undo">Geri al</string>
     <string name="undone">geri alındı</string>
     <string name="pending">çalışmadı</string>
@@ -139,7 +136,7 @@
     <string name="dry_run_desc">Komutları çalıştırmadan tam olarak göster.</string>
     <string name="language_note">Dil, telefonun sistem dilini izler (Türkçe veya İngilizce).</string>
     <string name="about">Hakkında</string>
-    <string name="about_text">Reklam yok, analitik yok. Uygulama yalnızca yerel ağınızdaki TV ile konuşur. Paket sınıflandırmaları herkese açık Mi TV Stick (MDZ-24-AA) listelerinden gelir; bilinmeyen paketler DİKKAT sayılır.</string>
+    <string name="about_text">Reklam yok, analitik yok. Uygulama yalnızca yerel ağınıza bağlanır: seçtiğiniz TV\'ye ve Tara\'ya dokunduğunuzda Wi-Fi alt ağınızdaki adreslerin ADB portuna. Paket sınıflandırmaları herkese açık Mi TV Stick (MDZ-24-AA) listelerinden gelir; bilinmeyen paketler DİKKAT sayılır.</string>
     <string name="version">Sürüm %1$s</string>
     <string name="recovery_title">Bir şeyler ters giderse</string>
     <string name="recovery_text">1) Geçmiş > Geri al veya Tümünü geri yükle\'yi kullanın. 2) TV\'yi yeniden başlatın. 3) TV açılmıyorsa fabrika ayarlarına sıfırlayın: fişi çekin, kumandada OK + Geri tuşlarını basılı tutarak gücü yeniden takın ve Wipe data / factory reset seçin veya Ayarlar > Cihaz Tercihleri > Sıfırla\'yı kullanın. Fabrika sıfırlaması tüm sistem uygulamalarını geri getirir.</string>
