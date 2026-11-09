@@ -15,7 +15,8 @@ object PackageListParser {
             var name = line.removePrefix("package:").trim()
             val eq = name.lastIndexOf('=')
             if (eq >= 0) name = name.substring(eq + 1)
-            name = name.substringBefore(' ').trim()
+            // `pm list packages -U` appends " uid:1000"; anything else with spaces is rejected.
+            name = name.replace(Regex("\\s+uid:\\d+$"), "").trim()
             if (CommandBuilder.isValidPackageName(name)) result += name
         }
         return result

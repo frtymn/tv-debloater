@@ -26,6 +26,7 @@ class PackageListParserTest {
         val out = "WARNING: linker: something\npackage:\npackage:bad name\npackage:com.ok\nError: foo"
         assertEquals(setOf("com.ok"), PackageListParser.parsePackages(out))
         assertTrue(PackageListParser.parsePackages("").isEmpty())
+        assertEquals(setOf("com.uid.app"), PackageListParser.parsePackages("package:com.uid.app uid:10057"))
     }
 
     @Test
