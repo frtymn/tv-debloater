@@ -106,7 +106,7 @@ adb("shell", "input", "keyevent", "4")
 time.sleep(1)
 tap("Connect")
 wait_for("System apps", timeout=60)
-wait_for("PROTECTED", timeout=60)
+wait_for("Protected (", timeout=60)
 time.sleep(2)
 shot("packages")
 
