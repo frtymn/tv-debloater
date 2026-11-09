@@ -23,6 +23,8 @@ import com.frtymn.tvdebloater.data.BatchEntry
 import com.frtymn.tvdebloater.data.BatchKind
 import com.frtymn.tvdebloater.data.PackageDbLoader
 import com.frtymn.tvdebloater.data.SavedDevice
+import com.frtymn.tvdebloater.demo.DemoData
+import com.frtymn.tvdebloater.demo.DemoSnapshot
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -104,6 +106,8 @@ data class UiState(
     val run: RunState? = null,
     val message: String? = null,
     val showAggressiveWarning: Boolean = false,
+    /** Debug-only demo mode: sample data, nothing is ever sent over ADB. */
+    val demo: Boolean = false,
 )
 
 class MainViewModel(app: Application) : AndroidViewModel(app) {
@@ -124,11 +128,11 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     init {
         viewModelScope.launch {
             val done = store.onboardingDone.first()
-            _state.update { it.copy(onboardingDone = done, screen = if (done) Screen.CONNECT else Screen.ONBOARDING, ready = true) }
+            _state.update { if (it.demo) it.copy(ready = true) else it.copy(onboardingDone = done, screen = if (done) Screen.CONNECT else Screen.ONBOARDING, ready = true) }
         }
-        viewModelScope.launch { store.dryRun.collect { v -> _state.update { it.copy(dryRun = v) } } }
-        viewModelScope.launch { store.devices.collect { v -> _state.update { it.copy(devices = v) } } }
-        viewModelScope.launch { store.batches.collect { v -> _state.update { it.copy(batches = v.sortedByDescending { b -> b.timestamp }) } } }
+        viewModelScope.launch { store.dryRun.collect { v -> _state.update { if (it.demo) it else it.copy(dryRun = v) } } }
+        viewModelScope.launch { store.devices.collect { v -> _state.update { if (it.demo) it else it.copy(devices = v) } } }
+        viewModelScope.launch { store.batches.collect { v -> _state.update { if (it.demo) it else it.copy(batches = v.sortedByDescending { b -> b.timestamp }) } } }
     }
 
     // ---------------- navigation & settings ----------------
@@ -151,15 +155,81 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         _state.update { it.copy(onboardingDone = true, screen = if (it.conn is ConnState.Connected) Screen.PACKAGES else Screen.CONNECT) }
     }
 
-    fun setDryRun(v: Boolean) = viewModelScope.launch { store.setDryRun(v) }
+    fun setDryRun(v: Boolean) {
+        if (_state.value.demo) _state.update { it.copy(dryRun = v) } else viewModelScope.launch { store.setDryRun(v) }
+    }
     fun clearMessage() = _state.update { it.copy(message = null) }
     fun showMessage(m: String) = _state.update { it.copy(message = m) }
+
+    // ---------------- demo mode (debug builds only) ----------------
+
+    private var demoData: DemoSnapshot? = null
+    val demoAvailable: Boolean get() = DemoData.available
+
+    /** Fills the app with sample data. Does nothing in release builds. */
+    fun loadDemo() {
+        val d = DemoData.snapshot() ?: return
+        demoData = d
+        connectJob?.cancel(); scanJob?.cancel()
+        val items = d.packages.map { (pkg, st) -> toItem(pkg, st) }
+            .sortedWith(compareBy<PkgItem>({ it.level.ordinal }, { it.label.lowercase() }))
+        _state.update {
+            it.copy(
+                demo = true, ready = true, onboardingDone = true, screen = Screen.PACKAGES, conn = ConnState.Connected(d.device),
+                devices = d.savedDevices, packages = items, selected = emptySet(), query = "", filter = Filter.ALL,
+                mem = d.memBefore, storage = d.storageBefore, batches = d.batches, confirm = null, run = null,
+                loadingPackages = false, packagesError = null, scan = ScanState(),
+            )
+        }
+    }
+
+    /** Lets screenshot tests arrange a demo screen. Ignored outside demo mode. */
+    fun demoArrange(f: (UiState) -> UiState) = _state.update { if (it.demo) f(it) else it }
+
+    private fun runDemo(req: ConfirmRequest, dry: Boolean) {
+        val d = demoData ?: return
+        val results = req.steps.map { st ->
+            if (dry) StepResult(st, null, st.command) else StepResult(st, true, demoOutput(st))
+        }
+        _state.update { s ->
+            if (dry) return@update s.copy(confirm = null, screen = Screen.RESULTS, run = RunState(req, true, req.steps.size, false, results))
+            val newState = req.steps.associate { it.packageName to stateAfter(it.action) }
+            val batch = Batch(
+                id = UUID.randomUUID().toString(), timestamp = d.batches.maxOf { it.timestamp } + 3_600_000, device = "${d.device.model} (${d.device.host})",
+                kind = req.kind, action = req.action,
+                entries = results.map { r -> BatchEntry(r.step.packageName, r.step.action, r.step.previousState, r.step.command, true, r.output, restores = r.step.restores) },
+            )
+            s.copy(
+                confirm = null, screen = Screen.RESULTS, selected = emptySet(),
+                packages = s.packages.map { p -> newState[p.packageName]?.let { p.copy(state = it) } ?: p },
+                batches = listOf(batch) + s.batches.map { b ->
+                    if (b.kind != BatchKind.CHANGE) b else b.copy(entries = b.entries.mapIndexed { i, e ->
+                        if (req.steps.any { it.restores == "${b.id}#$i" }) e.copy(undone = true) else e
+                    })
+                }, mem = d.memAfter, storage = d.storageAfter,
+                run = RunState(req, false, req.steps.size, false, results, d.memBefore, d.memAfter, d.storageBefore, d.storageAfter),
+            )
+        }
+    }
+
+    private fun stateAfter(a: PkgAction) = when (a) {
+        PkgAction.DISABLE -> PkgState.DISABLED
+        PkgAction.UNINSTALL_USER -> PkgState.UNINSTALLED
+        PkgAction.ENABLE, PkgAction.INSTALL_EXISTING -> PkgState.ENABLED
+    }
+
+    private fun demoOutput(st: PlannedStep) = when (st.action) {
+        PkgAction.DISABLE -> "Package ${st.packageName} new state: disabled-user"
+        PkgAction.ENABLE -> "Package ${st.packageName} new state: enabled"
+        PkgAction.UNINSTALL_USER -> "Success"
+        PkgAction.INSTALL_EXISTING -> "Package ${st.packageName} installed for user: 0"
+    }
 
     // ---------------- connection ----------------
 
     fun connect(host: String, port: Int) {
         val h = host.trim()
-        if (h.isEmpty()) return
+        if (h.isEmpty() || _state.value.demo) return
         connectJob?.cancel()
         _state.update { it.copy(conn = ConnState.Connecting(h, port)) }
         connectJob = viewModelScope.launch {
@@ -184,12 +254,16 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     fun disconnect() = viewModelScope.launch {
         adb.disconnect()
-        _state.update { it.copy(conn = ConnState.Idle, screen = Screen.CONNECT, packages = emptyList(), selected = emptySet(), mem = null, storage = null) }
+        val wasDemo = _state.value.demo
+        demoData = null
+        _state.update { it.copy(demo = false, conn = ConnState.Idle, screen = Screen.CONNECT, packages = emptyList(), selected = emptySet(), mem = null, storage = null) }
+        if (wasDemo) _state.update { it.copy(devices = store.devices.first(), batches = store.batches.first().sortedByDescending { b -> b.timestamp }) }
     }
 
     fun forgetDevice(d: SavedDevice) = viewModelScope.launch { store.forgetDevice(d) }
 
     fun scan(port: Int) {
+        if (_state.value.demo) return
         scanJob?.cancel()
         if (scanner.localIpv4() == null) {
             _state.update { it.copy(scan = ScanState(noWifi = true, finished = true)) }
@@ -220,6 +294,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun refreshPackages() = viewModelScope.launch { loadPackages() }
 
     private suspend fun loadPackages(): Boolean {
+        if (_state.value.demo) return true
         _state.update { it.copy(loadingPackages = true, packagesError = null) }
         return try {
             val system = adb.shell(CommandBuilder.LIST_SYSTEM).output
@@ -268,6 +343,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun refreshStatsAsync() = viewModelScope.launch { runCatching { refreshStats() }.onFailure { if (it is AdbError) onAdbError(it) } }
 
     private suspend fun refreshStats() {
+        if (_state.value.demo) return
         val m = readMem(); val s = readStorage()
         _state.update { it.copy(mem = m, storage = s) }
     }
@@ -383,6 +459,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun execute() {
         val req = _state.value.confirm ?: return
         val dry = _state.value.dryRun
+        if (_state.value.demo) { runDemo(req, dry); return }
         val device = (_state.value.conn as? ConnState.Connected)?.info?.let { "${it.model} (${it.host})" } ?: "?"
         _state.update { it.copy(confirm = null, run = RunState(req, dry), screen = Screen.RESULTS) }
         viewModelScope.launch {

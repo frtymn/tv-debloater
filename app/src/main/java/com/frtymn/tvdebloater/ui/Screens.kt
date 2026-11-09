@@ -641,6 +641,11 @@ fun SettingsScreen(s: UiState, vm: MainViewModel) {
             SectionTitle(stringResource(R.string.about))
             Text(stringResource(R.string.about_text))
             Text(stringResource(R.string.version, BuildConfig.VERSION_NAME), style = MaterialTheme.typography.bodySmall)
+            if (vm.demoAvailable) {
+                SectionTitle(stringResource(R.string.demo_title))
+                Text(stringResource(R.string.demo_text), style = MaterialTheme.typography.bodySmall)
+                OutlinedButton(onClick = { vm.loadDemo() }, modifier = BigButton.fillMaxWidth()) { Text(stringResource(R.string.demo_load)) }
+            }
         }
     }
 }

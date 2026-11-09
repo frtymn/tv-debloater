@@ -81,6 +81,9 @@
     <string name="stats_unknown">RAM/storage: unavailable</string>
     <string name="dry_run_badge">DRY RUN</string>
     <string name="dry_run_on_hint">Dry run is ON: commands are only shown, nothing changes on the TV. Turn it off in Settings.</string>
+    <string name="demo_title">Demo data (debug build)</string>
+    <string name="demo_text">Fills the app with sample data so you can try every screen without a TV. Nothing is sent to any device. Disconnect to leave demo mode.</string>
+    <string name="demo_load">Load demo data</string>
     <string name="menu">Menu</string>
     <string name="history">History</string>
     <string name="settings">Settings</string>

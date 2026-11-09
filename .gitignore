@@ -14,3 +14,15 @@
 *.jks
 .kotlin/
 __pycache__/
+
+# Signing and local secrets
+*.p12
+*.pem
+*.key
+keystore.properties
+signing.properties
+secrets.properties
+.env
+.env.*
+# Node (docs rendering)
+node_modules/

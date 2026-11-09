@@ -38,6 +38,16 @@ android {
     }
     testOptions {
         unitTests.isReturnDefaultValues = true
+        unitTests.isIncludeAndroidResources = true
+        unitTests.all { test ->
+            // Screenshot rendering (Robolectric + Roborazzi) only runs when asked for: SCREENSHOTS=1.
+            if (System.getenv("SCREENSHOTS") == "1") {
+                test.systemProperty("roborazzi.test.record", "true")
+                test.maxHeapSize = "3g"
+            } else {
+                test.exclude("**/screenshots/**")
+            }
+        }
     }
 }
 
@@ -59,4 +69,9 @@ dependencies {
     implementation(libs.dadb)
 
     testImplementation(libs.junit)
+    testImplementation(platform(libs.compose.bom))
+    testImplementation(libs.compose.ui.test.junit4)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.roborazzi)
+    debugImplementation(libs.compose.ui.test.manifest)
 }
