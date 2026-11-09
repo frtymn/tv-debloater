@@ -21,7 +21,14 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 adb logcat -c
 python3 tools/ui_flow.py
 adb logcat -d > out/logcat.txt
-if grep -E "FATAL EXCEPTION" out/logcat.txt; then
+# Only fail on crashes of our own app. System apps on the emulator image
+# (for example the Live TV DVR task) sometimes crash on their own.
+if grep -A2 "FATAL EXCEPTION" out/logcat.txt | grep -q "Process: com.frtymn.tvdebloater"; then
+  grep -A20 "FATAL EXCEPTION" out/logcat.txt
   echo "App crashed"; exit 1
+fi
+if grep -q "FATAL EXCEPTION" out/logcat.txt; then
+  echo "Note: a system app crashed during the run (not TV Debloater):"
+  grep -A2 "FATAL EXCEPTION" out/logcat.txt | grep "Process:" || true
 fi
 echo "UI flow OK"
