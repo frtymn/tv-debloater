@@ -31,7 +31,16 @@ class EmulatorE2ETest {
     private fun trustedFilesDir(): File {
         val dir = Files.createTempDirectory("tvd-e2e").toFile()
         val adbDir = File(dir, "adb").apply { mkdirs() }
-        val home = File(System.getenv("ANDROID_USER_HOME") ?: (System.getProperty("user.home") + "/.android"))
+        val userHome = System.getProperty("user.home") ?: ""
+        val candidates = listOfNotNull(
+            System.getenv("E2E_ADB_KEY_DIR"),
+            System.getenv("ANDROID_USER_HOME"),
+            System.getenv("ANDROID_SDK_HOME")?.let { "$it/.android" },
+            System.getenv("ANDROID_PREFS_ROOT")?.let { "$it/.android" },
+            "$userHome/.android",
+        ).map(::File)
+        val home = candidates.firstOrNull { File(it, "adbkey").exists() && File(it, "adbkey.pub").exists() }
+            ?: throw AssertionError("host adb key not found in $candidates")
         File(home, "adbkey").copyTo(File(adbDir, "adbkey"))
         File(home, "adbkey.pub").copyTo(File(adbDir, "adbkey.pub"))
         return dir

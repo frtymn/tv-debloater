@@ -6,6 +6,7 @@ adb wait-for-device
 until adb shell service list | grep -q 'package'; do sleep 2; done
 adb shell getprop ro.build.version.release
 adb shell getprop ro.adb.secure || true
+echo "ANDROID_USER_HOME=${ANDROID_USER_HOME:-} HOME=$HOME"; ls -la "$HOME/.android" || true
 
 # 1) Real ADB end-to-end test from the JVM through the app's own AdbManager.
 E2E_ADB=1 ./gradlew --no-daemon testDebugUnitTest --tests '*EmulatorE2ETest*' -i | grep -E 'E2E|PASSED|FAILED|SKIPPED|BUILD' || true
