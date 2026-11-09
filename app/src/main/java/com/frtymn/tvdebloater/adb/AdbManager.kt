@@ -40,7 +40,7 @@ class AdbManager(filesDir: File, private val authTimeoutMs: Int = AUTH_SOCKET_TI
     val isConnected: Boolean get() = dadb != null
 
     private fun keyPair(): AdbKeyPair {
-        if (!privateKey.exists() || !publicKey.exists()) {
+        if (!privateKey.exists()) {
             keyDir.mkdirs()
             AdbKeyPair.generate(privateKey, publicKey)
         }

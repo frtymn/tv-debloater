@@ -39,10 +39,10 @@ class EmulatorE2ETest {
             System.getenv("ANDROID_PREFS_ROOT")?.let { "$it/.android" },
             "$userHome/.android",
         ).map(::File)
-        val home = candidates.firstOrNull { File(it, "adbkey").exists() && File(it, "adbkey.pub").exists() }
+        val home = candidates.firstOrNull { File(it, "adbkey").exists() }
             ?: throw AssertionError("host adb key not found in $candidates")
         File(home, "adbkey").copyTo(File(adbDir, "adbkey"))
-        File(home, "adbkey.pub").copyTo(File(adbDir, "adbkey.pub"))
+        File(home, "adbkey.pub").takeIf { it.exists() }?.copyTo(File(adbDir, "adbkey.pub"))
         return dir
     }
 
