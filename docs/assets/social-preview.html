@@ -17,8 +17,17 @@
 <body>
   <div class="logo"><img src="icon.svg" alt="">TV Debloater</div>
   <div class="copy">
-    <h1>Debloat your Android TV from your phone</h1>
-    <p>No root. No computer. Reversible.</p>
+    <h1 id="h">Debloat your Android TV from your phone</h1>
+    <p id="sub">No root. No computer. Reversible.</p>
   </div>
-  <div class="phone"><div class="screen"><img src="../screenshots/03-packages.png"></div></div>
+  <div class="phone"><div class="screen"><img id="shot" src="../screenshots/03-packages.png"></div></div>
+  <script>
+    // social-preview.html = English, social-preview.html?lang=tr = Turkish text and screenshot.
+    if (new URLSearchParams(location.search).get("lang") === "tr") {
+      document.documentElement.lang = "tr";
+      document.getElementById("h").textContent = "Android TV'nizi telefonunuzdan sadeleştirin";
+      document.getElementById("sub").textContent = "Root yok. Bilgisayar yok. Geri alınabilir.";
+      document.getElementById("shot").src = "../screenshots/03-packages-tr.png";
+    }
+  </script>
 </body></html>

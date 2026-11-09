@@ -1,4 +1,4 @@
-// Renders docs/hero.png and docs/social-preview.png from the HTML templates with headless Chromium.
+// Renders docs/hero(-tr).png and docs/social-preview(-tr).png from the HTML templates with headless Chromium.
 // Usage (from the repo root): npm install playwright@1 && npx playwright install --with-deps chromium && node docs/assets/render.mjs
 import { chromium } from "playwright";
 import path from "node:path";
@@ -9,6 +9,7 @@ const jobs = [
   { html: "hero.html", out: "../hero.png", width: 1600, height: 1000 },
   { html: "hero.html?lang=tr", out: "../hero-tr.png", width: 1600, height: 1000 },
   { html: "social-preview.html", out: "../social-preview.png", width: 1280, height: 640 },
+  { html: "social-preview.html?lang=tr", out: "../social-preview-tr.png", width: 1280, height: 640 },
 ];
 const browser = await chromium.launch();
 for (const j of jobs) {
