@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TV Debloater</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
+    <string name="retry">Retry</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+    <string name="done">Done</string>
+
+    <!-- Onboarding -->
+    <string name="onb_title">Prepare your TV</string>
+    <string name="onb_intro">TV Debloater talks to your Android TV over Wi-Fi using ADB. Do this once on the TV with the remote:</string>
+    <string name="onb_step1">Open Settings > Device Preferences > About.</string>
+    <string name="onb_step2">Select \"Build\" (Build number) and press OK 7 times until you see \"You are now a developer\".</string>
+    <string name="onb_step3">Go back to Device Preferences > Developer options and turn the Developer options switch on.</string>
+    <string name="onb_step4">Turn on \"USB debugging\". If you see \"Network debugging\" or \"ADB over network\", turn it on too.</string>
+    <string name="onb_step5">Find the TV\'s IP address: Settings > Network &amp; Internet > select your Wi-Fi network. It looks like 192.168.1.23.</string>
+    <string name="onb_step6">Keep the phone and the TV on the same Wi-Fi network.</string>
+    <string name="onb_safety">Nothing runs without your confirmation. Dry run is on by default, so you will first only see the commands. Every change is saved and can be undone.</string>
+    <string name="onb_start">I did this, continue</string>
+    <string name="show_guide">Setup guide</string>
+
+    <!-- Connect -->
+    <string name="connect_title">Connect to TV</string>
+    <string name="ip_label">TV IP address</string>
+    <string name="port_label">Port</string>
+    <string name="connect">Connect</string>
+    <string name="connecting">Connecting to %1$s…</string>
+    <string name="accept_prompt">Look at the TV now: it shows \"Allow USB debugging?\". Tick \"Always allow from this computer\" and press OK. Waiting up to 90 seconds.</string>
+    <string name="saved_devices">Saved devices</string>
+    <string name="forget">Forget</string>
+    <string name="scan">Scan network for port %1$d</string>
+    <string name="scanning">Scanning… %1$d / %2$d</string>
+    <string name="scan_none">No device with an open port was found. Check that debugging is on, or type the IP manually.</string>
+    <string name="scan_no_wifi">The phone is not on Wi-Fi. Connect it to the same Wi-Fi as the TV.</string>
+    <string name="scan_found">Found (tap to use):</string>
+    <string name="err_timeout">The TV did not answer in time. Check the IP address and that both devices are on the same Wi-Fi.</string>
+    <string name="err_auth_timeout">The TV did not confirm the connection. Did you press OK on the \"Allow USB debugging?\" prompt on the TV? Try again and accept it.</string>
+    <string name="err_refused">The TV refused the connection on this port. Turn on USB debugging / network debugging in Developer options and try again.</string>
+    <string name="err_unreachable">The TV cannot be reached at this address. Check the IP address in the TV\'s network settings.</string>
+    <string name="err_unauthorized">The TV rejected this phone (unauthorized). Retry and press OK on the TV prompt. If no prompt appears, open Developer options > Revoke USB debugging authorisations, then retry.</string>
+    <string name="err_disconnected">The connection to the TV was lost. Changes made so far are saved in History.</string>
+    <string name="err_not_connected">Not connected. Connect to the TV first.</string>
+    <string name="err_other">Connection error.</string>
+    <string name="error_details">Details: %1$s</string>
+
+    <!-- Packages -->
+    <string name="packages_title">System apps</string>
+    <string name="search">Search</string>
+    <string name="filter_all">All</string>
+    <string name="filter_safe">Safe</string>
+    <string name="filter_caution">Caution</string>
+    <string name="filter_protected">Protected</string>
+    <string name="filter_disabled">Disabled</string>
+    <string name="level_safe">SAFE</string>
+    <string name="level_caution">CAUTION</string>
+    <string name="level_protected">PROTECTED</string>
+    <string name="level_unknown">UNKNOWN</string>
+    <string name="state_disabled">disabled</string>
+    <string name="state_uninstalled">removed for user</string>
+    <string name="unknown_desc">Not in the database (unverified). Treated as CAUTION.</string>
+    <string name="unknown_core_desc">Unknown Android core package. Protected to be safe.</string>
+    <string name="profile_light">Light profile</string>
+    <string name="profile_aggressive">Aggressive profile</string>
+    <string name="aggressive_title">Aggressive profile</string>
+    <string name="aggressive_text">This also preselects some CAUTION packages (recommendations, PatchWall, Mi Cast, contacts/calendar storage). Some TV features may stop working. You can review and untick anything before confirming, and undo everything from History.</string>
+    <string name="aggressive_ok">I understand, preselect</string>
+    <string name="selected_count">%1$d selected</string>
+    <string name="select_visible">Select visible</string>
+    <string name="clear">Clear</string>
+    <string name="action_disable">Disable</string>
+    <string name="action_remove">Remove for user</string>
+    <string name="action_restore">Restore</string>
+    <string name="refresh">Refresh</string>
+    <string name="loading_packages">Reading the package list from the TV…</string>
+    <string name="no_packages">No packages match.</string>
+    <string name="ram">RAM: %1$s free of %2$s</string>
+    <string name="storage">/data: %1$s free of %2$s</string>
+    <string name="stats_unknown">RAM/storage: unavailable</string>
+    <string name="dry_run_badge">DRY RUN</string>
+    <string name="dry_run_on_hint">Dry run is ON: commands are only shown, nothing changes on the TV. Turn it off in Settings.</string>
+    <string name="history">History</string>
+    <string name="settings">Settings</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="panic">Restore all</string>
+    <string name="device_line">%1$s · Android %2$s · %3$s</string>
+    <string name="sources">Sources: %1$d</string>
+    <string name="nothing_applicable">None of the selected packages can take this action.</string>
+    <string name="nothing_to_undo">Nothing to undo here.</string>
+    <string name="nothing_to_restore">Nothing to restore: everything this app changed is already enabled.</string>
+
+    <!-- Confirm -->
+    <string name="confirm_title_disable">Disable %1$d packages?</string>
+    <string name="confirm_title_remove">Remove %1$d packages for the current user?</string>
+    <string name="confirm_title_restore">Restore %1$d steps?</string>
+    <string name="confirm_title_undo">Undo %1$d steps?</string>
+    <string name="confirm_title_panic">Restore everything (%1$d steps)?</string>
+    <string name="confirm_text">These exact commands will be sent to the TV:</string>
+    <string name="confirm_dry">Dry run is ON: nothing will be executed.</string>
+    <string name="confirm_caution">Contains CAUTION packages. Some features may stop working.</string>
+    <string name="confirm_remove_warning">\"Remove for current user\" hides the app for user 0. The APK stays on the system and can be brought back with \"Restore\" (cmd package install-existing). A factory reset also brings it back. Its data for this user is kept (-k), but prefer \"Disable\" if you are unsure.</string>
+    <string name="confirm_skipped">Skipped (already in that state or not allowed): %1$s</string>
+    <string name="confirm_run">Run</string>
+    <string name="confirm_show">Show commands</string>
+    <string name="confirm_remove_check">I understand the risk</string>
+
+    <!-- Results -->
+    <string name="results_title">Results</string>
+    <string name="running">Running %1$d / %2$d</string>
+    <string name="summary">%1$d succeeded, %2$d failed</string>
+    <string name="summary_dry">Dry run: %1$d commands shown, nothing executed.</string>
+    <string name="result_ok">OK</string>
+    <string name="result_fail">FAILED</string>
+    <string name="result_dry">DRY RUN</string>
+    <string name="before_after">Before / after</string>
+    <string name="ram_diff">Free RAM: %1$s → %2$s (%3$s)</string>
+    <string name="storage_diff">Free /data: %1$s → %2$s (%3$s)</string>
+    <string name="restart_hint">Restart the TV yourself when convenient (Settings > Device Preferences > About > Restart) so the changes fully apply. Wait about a minute after the last change before restarting. The app never restarts the TV.</string>
+    <string name="fatal_error">Stopped: %1$s</string>
+
+    <!-- History -->
+    <string name="history_empty">No changes yet. Every real batch is saved here before it runs.</string>
+    <string name="undo_batch">Undo batch</string>
+    <string name="undo">Undo</string>
+    <string name="undone">undone</string>
+    <string name="pending">not run</string>
+    <string name="export">Export</string>
+    <string name="import_">Import</string>
+    <string name="imported">Imported %1$d batches.</string>
+    <string name="import_failed">Import failed: %1$s</string>
+    <string name="kind_change">Change</string>
+    <string name="kind_undo">Undo</string>
+    <string name="kind_panic">Restore all</string>
+    <string name="panic_explain">Re-enables every package this app has ever disabled or removed (from History).</string>
+    <string name="share_history">Share history</string>
+
+    <!-- Settings -->
+    <string name="dry_run">Dry run</string>
+    <string name="dry_run_desc">Show the exact commands without executing them.</string>
+    <string name="language_note">Language follows the phone\'s system language (Turkish or English).</string>
+    <string name="about">About</string>
+    <string name="about_text">No ads, no analytics. The app only talks to the TV on your local network. Package classifications come from public Mi TV Stick (MDZ-24-AA) debloat lists; unknown packages are treated as CAUTION.</string>
+    <string name="version">Version %1$s</string>
+    <string name="recovery_title">If something goes wrong</string>
+    <string name="recovery_text">1) Use History > Undo, or Restore all. 2) Restart the TV. 3) If the TV no longer boots, factory reset it: unplug it, hold OK + Back on the remote while plugging the power back in, then choose Wipe data / factory reset, or use Settings > Device Preferences > Reset. A factory reset brings back every system app.</string>
+</resources>

@@ -1,0 +1,1150 @@
+{
+  "version": 1,
+  "device": "Xiaomi Mi TV Stick MDZ-24-AA (MiTV-AESP0, aquaman), Android TV 9",
+  "packages": [
+    {
+      "packageName": "com.miui.tv.analytics",
+      "level": "SAFE",
+      "label": "Xiaomi Analytics",
+      "descriptionEn": "Xiaomi usage analytics/telemetry.",
+      "descriptionTr": "Xiaomi kullanım analitiği (telemetri).",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt",
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/scripts/debloat.sh"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "tv.alphonso.alphonso_eula",
+      "level": "SAFE",
+      "label": "Alphonso",
+      "descriptionEn": "Alphonso automatic content recognition (viewing tracking).",
+      "descriptionTr": "Alphonso otomatik içerik tanıma (izleme takibi).",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt",
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/scripts/debloat.sh"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.feedback",
+      "level": "SAFE",
+      "label": "Google Feedback",
+      "descriptionEn": "Sends feedback/crash reports to Google.",
+      "descriptionTr": "Google'a geri bildirim/hata raporu gönderir.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt",
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/scripts/debloat.sh"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.tv.bugreportsender",
+      "level": "SAFE",
+      "label": "Bug report sender",
+      "descriptionEn": "Uploads bug reports.",
+      "descriptionTr": "Hata raporlarını yükler.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.mitv.tvhome.michannel",
+      "level": "SAFE",
+      "label": "Mi Channel rows",
+      "descriptionEn": "PatchWall/Xiaomi content rows on the home screen.",
+      "descriptionTr": "Ana ekrandaki Xiaomi/PatchWall içerik satırları.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt",
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/scripts/debloat.sh"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.xm.webcontent",
+      "level": "SAFE",
+      "label": "Xiaomi web content",
+      "descriptionEn": "Xiaomi sponsored web content.",
+      "descriptionTr": "Xiaomi sponsorlu web içeriği.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt",
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/scripts/debloat.sh"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "android.autoinstalls.config.xiaomi.mibox3",
+      "level": "SAFE",
+      "label": "Play Auto Installs",
+      "descriptionEn": "Auto-installs partner apps from Play.",
+      "descriptionTr": "Partner uygulamalarını Play'den otomatik kurar.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt",
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/scripts/debloat.sh"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "android.autoinstalls.config.xioami.mibox3",
+      "level": "SAFE",
+      "label": "Play Auto Installs (dup.)",
+      "descriptionEn": "Duplicate of the partner auto-install config (misspelled by Xiaomi).",
+      "descriptionTr": "Partner otomatik kurulum ayarının kopyası (Xiaomi yazımı hatalı).",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt",
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/scripts/debloat.sh"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.mitv.download.service",
+      "level": "SAFE",
+      "label": "Mi download service",
+      "descriptionEn": "PatchWall download service.",
+      "descriptionTr": "PatchWall indirme servisi.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt",
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/scripts/debloat.sh"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.mitv.dream",
+      "level": "SAFE",
+      "label": "Mi screensaver",
+      "descriptionEn": "Xiaomi screensaver.",
+      "descriptionTr": "Xiaomi ekran koruyucusu.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt",
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/scripts/debloat.sh"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.xiaomo.tv.milegal",
+      "level": "SAFE",
+      "label": "Mi Legal",
+      "descriptionEn": "Xiaomi privacy-policy screen.",
+      "descriptionTr": "Xiaomi gizlilik politikası ekranı.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/scripts/debloat.sh"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.printspooler",
+      "level": "SAFE",
+      "label": "Print spooler",
+      "descriptionEn": "Printing service; unused on a TV.",
+      "descriptionTr": "Yazdırma servisi; TV'de kullanılmaz.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt",
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/scripts/debloat.sh"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.syncadapters.calendar",
+      "level": "SAFE",
+      "label": "Calendar sync",
+      "descriptionEn": "Google Calendar sync adapter.",
+      "descriptionTr": "Google Takvim eşitleme bağdaştırıcısı.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt",
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/scripts/debloat.sh"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.syncadapters.contacts",
+      "level": "SAFE",
+      "label": "Contacts sync",
+      "descriptionEn": "Google Contacts sync adapter.",
+      "descriptionTr": "Google Kişiler eşitleme bağdaştırıcısı.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt",
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/scripts/debloat.sh"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.mitv.videoplayer",
+      "level": "SAFE",
+      "label": "Mi Video Player",
+      "descriptionEn": "Stock Xiaomi video player. Keep it if you use it.",
+      "descriptionTr": "Xiaomi video oynatıcı. Kullanıyorsanız dokunmayın.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt",
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/scripts/debloat.sh"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.dazn",
+      "level": "SAFE",
+      "label": "DAZN",
+      "descriptionEn": "Preloaded DAZN app.",
+      "descriptionTr": "Önyüklü DAZN uygulaması.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.nousguide.android.rbtv",
+      "level": "SAFE",
+      "label": "Red Bull TV",
+      "descriptionEn": "Preloaded Red Bull TV app.",
+      "descriptionTr": "Önyüklü Red Bull TV uygulaması.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.apps.tachyon",
+      "level": "SAFE",
+      "label": "Google Duo",
+      "descriptionEn": "Preloaded Google Duo.",
+      "descriptionTr": "Önyüklü Google Duo.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.play.games",
+      "level": "SAFE",
+      "label": "Play Games",
+      "descriptionEn": "Google Play Games.",
+      "descriptionTr": "Google Play Oyunlar.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.tcl.browser",
+      "level": "SAFE",
+      "label": "TCL Browser",
+      "descriptionEn": "Preloaded browser.",
+      "descriptionTr": "Önyüklü tarayıcı.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.videos",
+      "level": "SAFE",
+      "label": "Play Movies & TV",
+      "descriptionEn": "Google Play Movies & TV.",
+      "descriptionTr": "Google Play Filmler ve TV.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.youtube.tvmusic",
+      "level": "SAFE",
+      "label": "YouTube Music",
+      "descriptionEn": "YouTube Music for TV. Keep it if you use it.",
+      "descriptionTr": "TV için YouTube Music. Kullanıyorsanız dokunmayın.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.tv",
+      "level": "SAFE",
+      "label": "Live Channels",
+      "descriptionEn": "Live Channels; the stick has no tuner or HDMI input.",
+      "descriptionTr": "Canlı Kanallar; çubukta tuner/HDMI girişi yok.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.backdrop",
+      "level": "SAFE",
+      "label": "Ambient screensaver",
+      "descriptionEn": "Google ambient screensaver.",
+      "descriptionTr": "Google ambiyans ekran koruyucusu.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.tvrecommendations",
+      "level": "CAUTION",
+      "label": "TV recommendations",
+      "descriptionEn": "Content recommendations. Disabled in lists that also replace the launcher; the stock home rows may change.",
+      "descriptionTr": "İçerik önerileri. Başlatıcıyı değiştiren listelerde kapatılmış; ana ekran satırları değişebilir.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": true
+    },
+    {
+      "packageName": "com.mitv.tvhome.atv",
+      "level": "CAUTION",
+      "label": "PatchWall",
+      "descriptionEn": "Xiaomi PatchWall. Disabled in lists that also replace the launcher.",
+      "descriptionTr": "Xiaomi PatchWall. Başlatıcıyı değiştiren listelerde kapatılmış.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": true
+    },
+    {
+      "packageName": "mitv.service",
+      "level": "CAUTION",
+      "label": "MiTV service",
+      "descriptionEn": "MiTV service framework. Crashes Settings on some Xiaomi firmware.",
+      "descriptionTr": "MiTV servis çatısı. Bazı Xiaomi yazılımlarında Ayarlar'ı çökertir.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.mitv.milinkservice",
+      "level": "CAUTION",
+      "label": "Mi Cast",
+      "descriptionEn": "Mi Cast receiver. Disable only if you never cast from a Xiaomi phone.",
+      "descriptionTr": "Mi Cast alıcısı. Xiaomi telefondan yansıtma yapmıyorsanız kapatın.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt",
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/scripts/debloat.sh"
+      ],
+      "aggressive": true
+    },
+    {
+      "packageName": "com.android.providers.calendar",
+      "level": "CAUTION",
+      "label": "Calendar storage",
+      "descriptionEn": "Calendar data provider. Disabled on verified units, but it is an Android core provider.",
+      "descriptionTr": "Takvim veri sağlayıcısı. Doğrulanmış cihazlarda kapatılmış ama Android çekirdek sağlayıcısı.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt",
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/scripts/debloat.sh"
+      ],
+      "aggressive": true
+    },
+    {
+      "packageName": "com.android.providers.contacts",
+      "level": "CAUTION",
+      "label": "Contacts storage",
+      "descriptionEn": "Contacts data provider. Disabled on verified units, but it is an Android core provider.",
+      "descriptionTr": "Kişiler veri sağlayıcısı. Doğrulanmış cihazlarda kapatılmış ama Android çekirdek sağlayıcısı.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt",
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/scripts/debloat.sh"
+      ],
+      "aggressive": true
+    },
+    {
+      "packageName": "com.google.android.partnersetup",
+      "level": "CAUTION",
+      "label": "Partner setup",
+      "descriptionEn": "Google partner setup helper.",
+      "descriptionTr": "Google partner kurulum yardımcısı.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.onetimeinitializer",
+      "level": "CAUTION",
+      "label": "One-time init (Google)",
+      "descriptionEn": "Runs once at first boot.",
+      "descriptionTr": "İlk açılışta bir kez çalışır.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.onetimeinitializer",
+      "level": "CAUTION",
+      "label": "One-time init",
+      "descriptionEn": "Runs once at first boot.",
+      "descriptionTr": "İlk açılışta bir kez çalışır.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.backuptransport",
+      "level": "CAUTION",
+      "label": "Google backup transport",
+      "descriptionEn": "Google backup. You lose cloud backup of app data.",
+      "descriptionTr": "Google yedekleme. Uygulama verisi bulut yedeği kaybolur.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.backupconfirm",
+      "level": "CAUTION",
+      "label": "Backup confirmation",
+      "descriptionEn": "Confirmation UI for adb backup.",
+      "descriptionTr": "adb yedekleme onay ekranı.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.sharedstoragebackup",
+      "level": "CAUTION",
+      "label": "Shared storage backup",
+      "descriptionEn": "Backup helper.",
+      "descriptionTr": "Yedekleme yardımcısı.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.wallpaperbackup",
+      "level": "CAUTION",
+      "label": "Wallpaper backup",
+      "descriptionEn": "Backup helper.",
+      "descriptionTr": "Yedekleme yardımcısı.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.settings.intelligence",
+      "level": "CAUTION",
+      "label": "Settings search",
+      "descriptionEn": "Search/suggestions inside Settings.",
+      "descriptionTr": "Ayarlar içinde arama/öneriler.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.se",
+      "level": "CAUTION",
+      "label": "Secure element",
+      "descriptionEn": "Secure element service; the stick has no NFC.",
+      "descriptionTr": "Güvenli öğe servisi; çubukta NFC yok.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.cts.ctsshim",
+      "level": "CAUTION",
+      "label": "CTS shim",
+      "descriptionEn": "Compatibility test shim.",
+      "descriptionTr": "Uyumluluk testi yardımcısı.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.cts.priv.ctsshim",
+      "level": "CAUTION",
+      "label": "CTS shim (priv)",
+      "descriptionEn": "Compatibility test shim.",
+      "descriptionTr": "Uyumluluk testi yardımcısı.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.dreams.basic",
+      "level": "CAUTION",
+      "label": "Basic screensaver",
+      "descriptionEn": "Basic Android screensaver.",
+      "descriptionTr": "Temel Android ekran koruyucusu.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.apps.mediashell",
+      "level": "CAUTION",
+      "label": "Chromecast built-in",
+      "descriptionEn": "Chromecast receiver. Disabling it stops casting.",
+      "descriptionTr": "Chromecast alıcısı. Kapatırsanız yansıtma çalışmaz.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.katniss",
+      "level": "CAUTION",
+      "label": "Google voice search",
+      "descriptionEn": "Voice search/Assistant. The remote's voice button stops working.",
+      "descriptionTr": "Sesli arama/Asistan. Kumandanın ses tuşu çalışmaz.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.speech.pumpkin",
+      "level": "CAUTION",
+      "label": "Speech (Pumpkin)",
+      "descriptionEn": "Offline speech recognition for voice commands.",
+      "descriptionTr": "Sesli komutlar için çevrimdışı konuşma tanıma.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.tts",
+      "level": "CAUTION",
+      "label": "Google Text-to-speech",
+      "descriptionEn": "Text-to-speech. Needed by TalkBack and apps that read aloud.",
+      "descriptionTr": "Metin okuma. TalkBack ve sesli okuyan uygulamalar için gerekli.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.marvin.talkback",
+      "level": "CAUTION",
+      "label": "TalkBack",
+      "descriptionEn": "Accessibility screen reader. Keep it if anyone needs it.",
+      "descriptionTr": "Erişilebilirlik ekran okuyucusu. İhtiyaç varsa dokunmayın.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/yositapjani/ExtremeSlimTV/blob/main/profiles/mitv-aesp0-mi-tv-stick-fhd.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.tv.frameworkpackagestubs",
+      "level": "CAUTION",
+      "label": "Framework stubs",
+      "descriptionEn": "Stub activities for intents a TV cannot handle. Unverified.",
+      "descriptionTr": "TV'nin işleyemediği istekler için yedek ekranlar. Doğrulanmadı.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.htmlviewer",
+      "level": "CAUTION",
+      "label": "HTML viewer",
+      "descriptionEn": "Shows license/HTML pages. Unverified.",
+      "descriptionTr": "Lisans/HTML sayfalarını gösterir. Doğrulanmadı.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.providers.userdictionary",
+      "level": "CAUTION",
+      "label": "User dictionary",
+      "descriptionEn": "Keyboard user dictionary. Unverified.",
+      "descriptionTr": "Klavye kullanıcı sözlüğü. Doğrulanmadı.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.statementservice",
+      "level": "CAUTION",
+      "label": "Intent filter verifier",
+      "descriptionEn": "App link verification. Unverified.",
+      "descriptionTr": "Uygulama bağlantı doğrulaması. Doğrulanmadı.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.vpndialogs",
+      "level": "CAUTION",
+      "label": "VPN dialogs",
+      "descriptionEn": "VPN confirmation dialogs. Needed if you use a VPN app.",
+      "descriptionTr": "VPN onay pencereleri. VPN kullanıyorsanız gerekli.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.pacprocessor",
+      "level": "CAUTION",
+      "label": "PAC processor",
+      "descriptionEn": "Proxy auto-config. Unverified.",
+      "descriptionTr": "Proxy otomatik yapılandırma. Doğrulanmadı.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.youtube.tv",
+      "level": "CAUTION",
+      "label": "YouTube",
+      "descriptionEn": "YouTube for TV. Keep it if you use it.",
+      "descriptionTr": "TV için YouTube. Kullanıyorsanız dokunmayın.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.netflix.ninja",
+      "level": "CAUTION",
+      "label": "Netflix",
+      "descriptionEn": "Netflix. Keep it if you use it; the remote's Netflix key will do nothing.",
+      "descriptionTr": "Netflix. Kullanıyorsanız dokunmayın; kumandadaki Netflix tuşu çalışmaz.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json",
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.amazon.amazonvideo.livingroom",
+      "level": "CAUTION",
+      "label": "Prime Video",
+      "descriptionEn": "Prime Video. Keep it if you use it.",
+      "descriptionTr": "Prime Video. Kullanıyorsanız dokunmayın.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "android",
+      "level": "PROTECTED",
+      "label": "Android system",
+      "descriptionEn": "Core Android framework.",
+      "descriptionTr": "Android çekirdek çatısı.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.tvlauncher",
+      "level": "PROTECTED",
+      "label": "Home screen (launcher)",
+      "descriptionEn": "Stock home screen. Without it the Home key does nothing and the stick may not finish booting.",
+      "descriptionTr": "Ana ekran. Olmadan Ana Sayfa tuşu çalışmaz, cihaz açılmayabilir.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/Gathin23/cleanyourtv/issues/884"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.apps.tv.launcherx",
+      "level": "PROTECTED",
+      "label": "Google TV home",
+      "descriptionEn": "Home screen component.",
+      "descriptionTr": "Ana ekran bileşeni.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.leanbacklauncher",
+      "level": "PROTECTED",
+      "label": "Leanback launcher",
+      "descriptionEn": "Home screen.",
+      "descriptionTr": "Ana ekran.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.tungsten.setupwraith",
+      "level": "PROTECTED",
+      "label": "Setup wizard",
+      "descriptionEn": "Setup wizard; on this stick it can own the saved Wi-Fi network (disabling it drops Wi-Fi and ADB).",
+      "descriptionTr": "Kurulum sihirbazı; bu cihazda kayıtlı Wi-Fi ağının sahibi olabilir (kapatmak Wi-Fi ve ADB'yi keser).",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt",
+        "https://github.com/Gathin23/cleanyourtv/issues/884"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.vending",
+      "level": "PROTECTED",
+      "label": "Google Play Store",
+      "descriptionEn": "App store.",
+      "descriptionTr": "Uygulama mağazası.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.gms",
+      "level": "PROTECTED",
+      "label": "Google Play Services",
+      "descriptionEn": "Google core services.",
+      "descriptionTr": "Google çekirdek servisleri.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.gsf",
+      "level": "PROTECTED",
+      "label": "Google Services Framework",
+      "descriptionEn": "Google core framework.",
+      "descriptionTr": "Google çekirdek çatısı.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.sss.authbridge",
+      "level": "PROTECTED",
+      "label": "Auth bridge",
+      "descriptionEn": "Google account sign-in bridge.",
+      "descriptionTr": "Google hesap giriş köprüsü.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.packageinstaller",
+      "level": "PROTECTED",
+      "label": "Package installer",
+      "descriptionEn": "Installs apps.",
+      "descriptionTr": "Uygulama yükler.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.packageinstaller",
+      "level": "PROTECTED",
+      "label": "Package installer",
+      "descriptionEn": "Installs apps.",
+      "descriptionTr": "Uygulama yükler.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.systemui",
+      "level": "PROTECTED",
+      "label": "System UI",
+      "descriptionEn": "System user interface.",
+      "descriptionTr": "Sistem arayüzü.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.tv.settings",
+      "level": "PROTECTED",
+      "label": "Settings",
+      "descriptionEn": "TV settings.",
+      "descriptionTr": "TV ayarları.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.settings",
+      "level": "PROTECTED",
+      "label": "Settings",
+      "descriptionEn": "Settings.",
+      "descriptionTr": "Ayarlar.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.providers.settings",
+      "level": "PROTECTED",
+      "label": "Settings storage",
+      "descriptionEn": "Stores all system settings.",
+      "descriptionTr": "Tüm sistem ayarlarını saklar.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.bluetooth",
+      "level": "PROTECTED",
+      "label": "Bluetooth",
+      "descriptionEn": "Bluetooth; the remote uses it.",
+      "descriptionTr": "Bluetooth; kumanda bunu kullanır.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.droidlogic.ble",
+      "level": "PROTECTED",
+      "label": "BLE remote service",
+      "descriptionEn": "Amlogic Bluetooth LE (remote) service.",
+      "descriptionTr": "Amlogic Bluetooth LE (kumanda) servisi.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.companiondevicemanager",
+      "level": "PROTECTED",
+      "label": "Companion devices",
+      "descriptionEn": "Bluetooth companion pairing.",
+      "descriptionTr": "Bluetooth eşlik eşleştirmesi.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.inputdevices",
+      "level": "PROTECTED",
+      "label": "Input devices",
+      "descriptionEn": "Keyboard/remote layouts.",
+      "descriptionTr": "Klavye/kumanda düzenleri.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.tv.remote.service",
+      "level": "PROTECTED",
+      "label": "Android TV Remote Service",
+      "descriptionEn": "Phone-as-remote and the remote's microphone bridge.",
+      "descriptionTr": "Telefonu kumanda yapma ve kumanda mikrofonu köprüsü.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.inputmethod.latin",
+      "level": "PROTECTED",
+      "label": "Gboard",
+      "descriptionEn": "On-screen keyboard (input method).",
+      "descriptionTr": "Ekran klavyesi (giriş yöntemi).",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.leanback.ime",
+      "level": "PROTECTED",
+      "label": "Leanback keyboard",
+      "descriptionEn": "On-screen keyboard.",
+      "descriptionTr": "Ekran klavyesi.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.shell",
+      "level": "PROTECTED",
+      "label": "Shell (ADB)",
+      "descriptionEn": "Runs ADB commands. This app needs it.",
+      "descriptionTr": "ADB komutlarını çalıştırır. Bu uygulama buna muhtaç.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.captiveportallogin",
+      "level": "PROTECTED",
+      "label": "Captive portal login",
+      "descriptionEn": "Wi-Fi login pages.",
+      "descriptionTr": "Wi-Fi giriş sayfaları.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.proxyhandler",
+      "level": "PROTECTED",
+      "label": "Proxy handler",
+      "descriptionEn": "Network proxy.",
+      "descriptionTr": "Ağ proxy'si.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.certinstaller",
+      "level": "PROTECTED",
+      "label": "Certificate installer",
+      "descriptionEn": "Network/Wi-Fi certificates.",
+      "descriptionTr": "Ağ/Wi-Fi sertifikaları.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.keychain",
+      "level": "PROTECTED",
+      "label": "Key chain",
+      "descriptionEn": "Credential storage.",
+      "descriptionTr": "Kimlik bilgisi deposu.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.defcontainer",
+      "level": "PROTECTED",
+      "label": "Package access helper",
+      "descriptionEn": "Needed to install apps.",
+      "descriptionTr": "Uygulama kurulumu için gerekli.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.externalstorage",
+      "level": "PROTECTED",
+      "label": "External storage",
+      "descriptionEn": "Storage access.",
+      "descriptionTr": "Depolama erişimi.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.providers.media",
+      "level": "PROTECTED",
+      "label": "Media storage",
+      "descriptionEn": "Media database.",
+      "descriptionTr": "Medya veritabanı.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.providers.downloads",
+      "level": "PROTECTED",
+      "label": "Download manager",
+      "descriptionEn": "System download manager (Play and updates use it).",
+      "descriptionTr": "Sistem indirme yöneticisi (Play ve güncellemeler kullanır).",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.providers.tv",
+      "level": "PROTECTED",
+      "label": "TV provider",
+      "descriptionEn": "Channel/row data for the home screen.",
+      "descriptionTr": "Ana ekran kanal/satır verisi.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.android.location.fused",
+      "level": "PROTECTED",
+      "label": "Fused location",
+      "descriptionEn": "Location provider.",
+      "descriptionTr": "Konum sağlayıcısı.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.ext.services",
+      "level": "PROTECTED",
+      "label": "Android Services Library",
+      "descriptionEn": "Core system services.",
+      "descriptionTr": "Çekirdek sistem servisleri.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.ext.shared",
+      "level": "PROTECTED",
+      "label": "Android Shared Library",
+      "descriptionEn": "Shared system library.",
+      "descriptionTr": "Paylaşılan sistem kütüphanesi.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.google.android.webview",
+      "level": "PROTECTED",
+      "label": "Android System WebView",
+      "descriptionEn": "Web rendering used by many apps and sign-in.",
+      "descriptionTr": "Birçok uygulama ve giriş ekranının kullandığı web motoru.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.droidlogic",
+      "level": "PROTECTED",
+      "label": "Amlogic platform",
+      "descriptionEn": "Amlogic hardware platform service.",
+      "descriptionTr": "Amlogic donanım platform servisi.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.droidlogic.SubTitleService",
+      "level": "PROTECTED",
+      "label": "Subtitle service",
+      "descriptionEn": "Amlogic platform subtitle service.",
+      "descriptionTr": "Amlogic platform altyazı servisi.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.droidlogic.overlay",
+      "level": "PROTECTED",
+      "label": "Amlogic overlay",
+      "descriptionEn": "Platform resources.",
+      "descriptionTr": "Platform kaynakları.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.xiaomi.mitv.res",
+      "level": "PROTECTED",
+      "label": "Xiaomi resources",
+      "descriptionEn": "Xiaomi system resources.",
+      "descriptionTr": "Xiaomi sistem kaynakları.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.xiaomi.mitv.updateservice",
+      "level": "PROTECTED",
+      "label": "Xiaomi system update",
+      "descriptionEn": "Firmware updates.",
+      "descriptionTr": "Yazılım güncellemeleri.",
+      "sources": [
+        "https://github.com/ricardomm7/xiaomi-tv-stick-aquaman-debloat/blob/main/data/baseline_packages.json"
+      ],
+      "aggressive": false
+    },
+    {
+      "packageName": "com.xiaomi.android.tvsetup.partnercustomizer",
+      "level": "PROTECTED",
+      "label": "Xiaomi partner customizer",
+      "descriptionEn": "Handles Bluetooth remote pairing and shortcut buttons on many Xiaomi devices.",
+      "descriptionTr": "Birçok Xiaomi cihazda kumanda eşleştirmesi ve kısayol tuşlarını yönetir.",
+      "sources": [
+        "https://github.com/Gathin23/cleanyourtv/blob/main/examples/xiaomi-mitv-aesp0/debloat.txt"
+      ],
+      "aggressive": false
+    }
+  ]
+}

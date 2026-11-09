@@ -1,0 +1,74 @@
+name: Build debug APK
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Gradle (also validates the wrapper)
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Unit tests
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon --stacktrace testDebugUnitTest
+
+      - name: Build debug APK
+        run: ./gradlew --no-daemon --stacktrace assembleDebug
+
+      - name: Rename APK
+        run: |
+          mkdir -p out
+          cp app/build/outputs/apk/debug/app-debug.apk out/tv-debloater-debug.apk
+          sha256sum out/tv-debloater-debug.apk | tee out/tv-debloater-debug.apk.sha256
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-reports
+          path: app/build/reports/tests/
+          if-no-files-found: ignore
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: tv-debloater-debug-apk
+          path: out/
+          if-no-files-found: error
+
+      - name: Publish GitHub Release
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: TV Debloater 1.0.${{ github.run_number }} (debug)
+          target_commitish: ${{ github.sha }}
+          make_latest: "true"
+          body: |
+            Debug APK built from ${{ github.sha }}.
+            Download `tv-debloater-debug.apk` below and open it on your phone.
+            Hata ayıklama APK'sı. Aşağıdaki `tv-debloater-debug.apk` dosyasını telefonunuza indirip açın.
+          files: |
+            out/tv-debloater-debug.apk
+            out/tv-debloater-debug.apk.sha256
