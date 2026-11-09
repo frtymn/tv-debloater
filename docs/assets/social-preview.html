@@ -8,15 +8,17 @@
                 linear-gradient(135deg, #0A0F24 0%, #141C44 55%, #1C1650 100%); }
   .logo { position: absolute; top: 80px; left: 80px; display: flex; align-items: center; gap: 14px; font-size: 26px; font-weight: 700; }
   .logo img { width: 44px; height: 44px; }
-  h1 { position: absolute; left: 80px; top: 200px; width: 700px; font-size: 68px; line-height: 1.06; font-weight: 800; letter-spacing: -2px; }
-  p { position: absolute; left: 80px; top: 452px; font-size: 32px; font-weight: 500; color: #B9C4DA; }
+  .copy { position: absolute; left: 80px; top: 80px; bottom: 80px; width: 720px; display: flex; flex-direction: column; justify-content: center; padding-top: 40px; }
+  h1 { font-size: 70px; line-height: 1.06; font-weight: 800; letter-spacing: -2px; }
+  p { margin-top: 28px; font-size: 32px; font-weight: 500; color: #B9C4DA; }
   .phone { position: absolute; right: 110px; top: 80px; width: 222px; height: 480px; border-radius: 34px; padding: 9px; }
   .phone .screen { border-radius: 26px; }
-  .phone::before { top: 16px; width: 9px; height: 9px; margin-left: -4.5px; }
 </style></head>
 <body>
   <div class="logo"><img src="icon.svg" alt="">TV Debloater</div>
-  <h1>Debloat your Android TV from your phone</h1>
-  <p>No root. No computer. Reversible.</p>
+  <div class="copy">
+    <h1>Debloat your Android TV from your phone</h1>
+    <p>No root. No computer. Reversible.</p>
+  </div>
   <div class="phone"><div class="screen"><img src="../screenshots/03-packages.png"></div></div>
 </body></html>
