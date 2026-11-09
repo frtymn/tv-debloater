@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -23,6 +24,9 @@ class AppStore(private val context: Context) {
         val ONBOARDING_DONE = booleanPreferencesKey("onboarding_done")
         val DEVICES = stringPreferencesKey("devices")
         val BATCHES = stringPreferencesKey("batches")
+        val DB_AUTO_UPDATE = booleanPreferencesKey("db_auto_update")
+        val DEVICE_NOTICE_DISMISSED = stringSetPreferencesKey("device_notice_dismissed")
+        val AGGRESSIVE_ALLOWED = stringSetPreferencesKey("aggressive_allowed_models")
     }
 
     private val batchListSerializer = ListSerializer(Batch.serializer())
@@ -37,6 +41,17 @@ class AppStore(private val context: Context) {
     val batches: Flow<List<Batch>> = context.dataStore.data.map { p ->
         p[Keys.BATCHES]?.let { runCatching { json.decodeFromString(batchListSerializer, it) }.getOrNull() } ?: emptyList()
     }
+
+    /** "Update package list automatically": ON until the user turns it off. */
+    val dbAutoUpdate: Flow<Boolean> = context.dataStore.data.map { it[Keys.DB_AUTO_UPDATE] ?: true }
+    /** Device models whose "unverified device" notice was dismissed. */
+    val deviceNoticeDismissed: Flow<Set<String>> = context.dataStore.data.map { it[Keys.DEVICE_NOTICE_DISMISSED] ?: emptySet() }
+    /** Unverified device models on which the user allowed the aggressive profile. */
+    val aggressiveAllowed: Flow<Set<String>> = context.dataStore.data.map { it[Keys.AGGRESSIVE_ALLOWED] ?: emptySet() }
+
+    suspend fun setDbAutoUpdate(value: Boolean) = context.dataStore.edit { it[Keys.DB_AUTO_UPDATE] = value }
+    suspend fun dismissDeviceNotice(model: String) = context.dataStore.edit { it[Keys.DEVICE_NOTICE_DISMISSED] = (it[Keys.DEVICE_NOTICE_DISMISSED] ?: emptySet()) + model }
+    suspend fun allowAggressive(model: String) = context.dataStore.edit { it[Keys.AGGRESSIVE_ALLOWED] = (it[Keys.AGGRESSIVE_ALLOWED] ?: emptySet()) + model }
 
     suspend fun setDryRun(value: Boolean) = context.dataStore.edit { it[Keys.DRY_RUN] = value }
     suspend fun setOnboardingDone(value: Boolean) = context.dataStore.edit { it[Keys.ONBOARDING_DONE] = value }

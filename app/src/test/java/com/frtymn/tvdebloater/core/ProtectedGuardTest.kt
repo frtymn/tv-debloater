@@ -84,7 +84,7 @@ class ProtectedGuardTest {
     /** The bundled database must agree with the code guard. */
     @Test
     fun bundledDatabaseIsConsistent() {
-        val file = listOf("src/main/assets/packages.json", "app/src/main/assets/packages.json").map(::File).first { it.exists() }
+        val file = listOf("../db/packages.json", "db/packages.json").map(::File).first { it.exists() }
         val db = Json { ignoreUnknownKeys = true }.decodeFromString(PackageDatabase.serializer(), file.readText())
         assertTrue(db.packages.isNotEmpty())
         assertEquals(db.packages.size, db.packages.map { it.packageName }.toSet().size)

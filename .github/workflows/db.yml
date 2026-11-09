@@ -1,0 +1,131 @@
+name: Package database
+
+# Validates the package database (db/packages.json) on every change, and publishes it to the
+# "db" branch when started by hand: Actions > "Package database" > Run workflow (on main).
+# The app reads https://raw.githubusercontent.com/frtymn/tv-debloater/db/db/manifest.json.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "db/**"
+      - "app/src/main/java/com/frtymn/tvdebloater/core/ProtectedGuard.kt"
+      - "tools/db_build.py"
+      - "tools/test_db_build.py"
+      - ".github/workflows/db.yml"
+  pull_request:
+    paths:
+      - "db/**"
+      - "app/src/main/java/com/frtymn/tvdebloater/core/ProtectedGuard.kt"
+      - "tools/db_build.py"
+      - "tools/test_db_build.py"
+      - ".github/workflows/db.yml"
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Publish database: bump dbVersion and commit it to the db branch"
+        type: boolean
+        default: true
+      force:
+        description: "Publish even if the package list did not change"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: package-db-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install the JSON Schema validator
+        run: python -m pip install --quiet "jsonschema==4.26.0"
+      - name: Tool self-test
+        run: python tools/test_db_build.py
+      - name: Validate db/packages.json (schema, code guard, SAFE sources)
+        run: python tools/db_build.py check
+
+  publish:
+    needs: validate
+    if: github.event_name == 'workflow_dispatch' && inputs.publish && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --quiet "jsonschema==4.26.0"
+
+      - name: Read the published database
+        run: |
+          mkdir -p "$RUNNER_TEMP/prev"
+          if git fetch --quiet origin db; then
+            git show origin/db:db/manifest.json > "$RUNNER_TEMP/prev/manifest.json"
+            git show origin/db:db/packages.json > "$RUNNER_TEMP/prev/packages.json"
+            echo "HAS_DB=1" >> "$GITHUB_ENV"
+          else
+            echo "No db branch yet: this is the first publish."
+          fi
+
+      - name: Build packages.json and manifest.json
+        run: |
+          args=(--out "$RUNNER_TEMP/out" --update-source)
+          if [ -n "${HAS_DB:-}" ]; then args+=(--previous-manifest "$RUNNER_TEMP/prev/manifest.json" --previous-db "$RUNNER_TEMP/prev/packages.json"); fi
+          if [ "${{ inputs.force }}" = "true" ]; then args+=(--force); fi
+          python tools/db_build.py publish "${args[@]}" | tee "$RUNNER_TEMP/publish.log"
+          if [ -f "$RUNNER_TEMP/out/db/manifest.json" ]; then echo "PUBLISH=1" >> "$GITHUB_ENV"; fi
+
+      - name: Commit to the db branch
+        if: env.PUBLISH == '1'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          wt="$RUNNER_TEMP/dbwt"
+          if [ -n "${HAS_DB:-}" ]; then
+            git worktree add -B db "$wt" origin/db
+          else
+            git worktree add --detach "$wt"
+            git -C "$wt" checkout --orphan db
+            git -C "$wt" rm -rq .
+          fi
+          mkdir -p "$wt/db"
+          cp "$RUNNER_TEMP/out/db/packages.json" "$RUNNER_TEMP/out/db/manifest.json" "$wt/db/"
+          cp db/packages.schema.json "$wt/db/"
+          cp db/README.md "$wt/README.md"
+          v=$(python -c "import json;print(json.load(open('$wt/db/manifest.json'))['dbVersion'])")
+          echo "DB_VERSION=$v" >> "$GITHUB_ENV"
+          git -C "$wt" add -A
+          git -C "$wt" commit -qm "Package database v$v"
+          git -C "$wt" push origin db
+
+      - name: Record the published version on main
+        if: env.PUBLISH == '1'
+        run: |
+          git add db/packages.json
+          if git diff --cached --quiet; then echo "main already matches"; exit 0; fi
+          git commit -qm "Package database v$DB_VERSION (published to the db branch)"
+          git pull --rebase --quiet origin main
+          git push origin HEAD:main
+
+      - name: Summary
+        run: |
+          {
+            echo "### Package database"
+            cat "$RUNNER_TEMP/publish.log"
+            if [ "${PUBLISH:-}" = "1" ]; then
+              echo ""
+              echo "Manifest: https://raw.githubusercontent.com/frtymn/tv-debloater/db/db/manifest.json"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

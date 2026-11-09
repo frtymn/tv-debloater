@@ -2,7 +2,9 @@
 
 package com.frtymn.tvdebloater.ui
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
@@ -81,6 +83,7 @@ import com.frtymn.tvdebloater.core.PkgState
 import com.frtymn.tvdebloater.core.SafetyLevel
 import com.frtymn.tvdebloater.data.Batch
 import com.frtymn.tvdebloater.data.BatchKind
+import com.frtymn.tvdebloater.db.DbSource
 import java.io.File
 import java.text.DateFormat
 import java.util.Date
@@ -233,6 +236,7 @@ fun ConnectScreen(s: UiState, vm: MainViewModel) {
 @Composable
 fun PackagesScreen(s: UiState, vm: MainViewModel) {
     val info = (s.conn as? ConnState.Connected)?.info
+    val context = LocalContext.current
     var menu by remember { mutableStateOf(false) }
     val visible = s.packages.filter { p ->
         val q = s.query.trim().lowercase()
@@ -307,6 +311,7 @@ fun PackagesScreen(s: UiState, vm: MainViewModel) {
         LazyColumn(Modifier.padding(pad).fillMaxSize(), contentPadding = androidx.compose.foundation.layout.PaddingValues(12.dp)) {
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    if (s.showDeviceNotice && info != null) DeviceNotice(info.model, onDismiss = vm::dismissDeviceNotice, onAllow = vm::allowAggressiveProfile)
                     if (s.dryRun) {
                         Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
                             Text(stringResource(R.string.dry_run_on_hint), Modifier.padding(12.dp), color = CautionColor)
@@ -336,19 +341,23 @@ fun PackagesScreen(s: UiState, vm: MainViewModel) {
                     }
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         OutlinedButton(onClick = vm::applyLightProfile, modifier = BigButton.weight(1f)) { Text(stringResource(R.string.profile_light)) }
-                        OutlinedButton(onClick = vm::requestAggressiveProfile, modifier = BigButton.weight(1f), colors = ButtonDefaults.outlinedButtonColors(contentColor = CautionColor)) {
+                        OutlinedButton(onClick = vm::requestAggressiveProfile, enabled = s.aggressiveAllowed, modifier = BigButton.weight(1f), colors = ButtonDefaults.outlinedButtonColors(contentColor = CautionColor)) {
                             Text(stringResource(R.string.profile_aggressive))
                         }
                     }
+                    if (!s.aggressiveAllowed) Text(stringResource(R.string.aggressive_off_unverified), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     TextButton(onClick = { vm.selectVisible(visible) }) { Text(stringResource(R.string.select_visible)) }
                     if (s.loadingPackages) {
                         LinearProgressIndicator(Modifier.fillMaxWidth()); Text(stringResource(R.string.loading_packages))
                     }
                     s.packagesError?.let { Text(stringResource(R.string.error_details, it), color = MaterialTheme.colorScheme.error) }
                     if (!s.loadingPackages && visible.isEmpty()) Text(stringResource(R.string.no_packages))
+                    Text(dbHeader(s.db), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
-            items(visible, key = { it.packageName }) { p -> PackageRow(p, p.packageName in s.selected) { vm.toggle(p.packageName) } }
+            items(visible, key = { it.packageName }) { p ->
+                PackageRow(p, p.packageName in s.selected, onToggle = { vm.toggle(p.packageName) }, onReport = { openUrl(context, vm.reportUrl(p)) })
+            }
         }
     }
 }
@@ -368,7 +377,7 @@ private fun StatsCard(s: UiState, onRefresh: () -> Unit) {
 }
 
 @Composable
-private fun PackageRow(p: PkgItem, selected: Boolean, onToggle: () -> Unit) {
+private fun PackageRow(p: PkgItem, selected: Boolean, onToggle: () -> Unit, onReport: () -> Unit) {
     val selectable = p.level != SafetyLevel.PROTECTED
     Column(
         Modifier.fillMaxWidth().clickable(enabled = selectable, onClick = onToggle).heightIn(min = 64.dp).padding(vertical = 6.dp),
@@ -387,7 +396,11 @@ private fun PackageRow(p: PkgItem, selected: Boolean, onToggle: () -> Unit) {
                     if (p.unknown) stringResource(if (p.level == SafetyLevel.PROTECTED) R.string.unknown_core_desc else R.string.unknown_desc) else ""
                 }
                 if (desc.isNotBlank()) Text(desc, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                if (p.sources.isNotEmpty()) Text(stringResource(R.string.sources, p.sources.size), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (p.sources.isNotEmpty()) Text(stringResource(R.string.sources, p.sources.size), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.weight(1f))
+                    else Spacer(Modifier.weight(1f))
+                    TextButton(onClick = onReport, modifier = Modifier.heightIn(min = 40.dp)) { Text(stringResource(R.string.report), style = MaterialTheme.typography.labelMedium) }
+                }
             }
         }
         HorizontalDivider(Modifier.padding(top = 6.dp))
@@ -638,6 +651,7 @@ fun SettingsScreen(s: UiState, vm: MainViewModel) {
                     Switch(checked = s.dryRun, onCheckedChange = null)
                 }
             }
+            PackageDbSection(s, vm)
             Text(stringResource(R.string.language_note))
             OutlinedButton(onClick = { vm.go(Screen.ONBOARDING) }, modifier = BigButton.fillMaxWidth()) { Text(stringResource(R.string.show_guide)) }
             SectionTitle(stringResource(R.string.recovery_title))
@@ -651,6 +665,87 @@ fun SettingsScreen(s: UiState, vm: MainViewModel) {
                 OutlinedButton(onClick = { vm.loadDemo() }, modifier = BigButton.fillMaxWidth()) { Text(stringResource(R.string.demo_load)) }
             }
         }
+    }
+}
+
+@Composable
+private fun PackageDbSection(s: UiState, vm: MainViewModel) {
+    val d = s.db
+    SectionTitle(stringResource(R.string.db_title))
+    Card(Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Text(
+                if (d.dbVersion > 0) stringResource(R.string.db_version_value, d.dbVersion, formatIsoDate(d.publishedAt)) else stringResource(R.string.db_version_unversioned),
+                style = MaterialTheme.typography.titleMedium,
+            )
+            Text(stringResource(if (d.source == DbSource.DOWNLOADED) R.string.db_source_downloaded else R.string.db_source_bundled), style = MaterialTheme.typography.bodySmall)
+            Text(
+                if (d.lastCheckedAt > 0) stringResource(R.string.db_last_checked, DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date(d.lastCheckedAt)))
+                else stringResource(R.string.db_never_checked),
+                style = MaterialTheme.typography.bodySmall,
+            )
+            Text(stringResource(R.string.db_counts, d.safe + d.caution + d.protected, d.safe, d.caution, d.protected), style = MaterialTheme.typography.bodySmall)
+            if (d.needsAppUpdate) Text(stringResource(R.string.db_needs_app), color = CautionColor, style = MaterialTheme.typography.bodyMedium)
+        }
+    }
+    Button(onClick = vm::checkDbNow, enabled = !d.checking, modifier = BigButton.fillMaxWidth()) {
+        if (d.checking) { CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp); Spacer(Modifier.width(8.dp)) }
+        Text(stringResource(if (d.checking) R.string.db_checking else R.string.db_check))
+    }
+    Card(Modifier.fillMaxWidth()) {
+        Row(
+            Modifier.toggleable(value = d.autoUpdate, role = Role.Switch, onValueChange = { vm.setDbAutoUpdate(it) }).padding(16.dp).heightIn(min = 52.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column(Modifier.weight(1f)) {
+                Text(stringResource(R.string.db_auto), style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(R.string.db_auto_desc), style = MaterialTheme.typography.bodySmall)
+            }
+            Switch(checked = d.autoUpdate, onCheckedChange = null)
+        }
+    }
+    OutlinedButton(onClick = vm::requestDbReset, enabled = d.source == DbSource.DOWNLOADED, modifier = BigButton.fillMaxWidth()) { Text(stringResource(R.string.db_reset)) }
+    if (d.lastResult.isNotBlank()) {
+        Text(stringResource(R.string.db_details, d.lastResult, d.lastRejected), style = MaterialTheme.typography.labelSmall, fontFamily = FontFamily.Monospace, color = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+    if (d.confirmReset) {
+        AlertDialog(
+            onDismissRequest = vm::dismissDbReset,
+            title = { Text(stringResource(R.string.db_reset_title)) },
+            text = { Text(stringResource(R.string.db_reset_text)) },
+            confirmButton = { Button(onClick = vm::resetDb, modifier = BigButton) { Text(stringResource(R.string.db_reset_ok)) } },
+            dismissButton = { TextButton(onClick = vm::dismissDbReset, modifier = BigButton) { Text(stringResource(R.string.cancel)) } },
+        )
+    }
+}
+
+@Composable
+private fun DeviceNotice(model: String, onDismiss: () -> Unit, onAllow: () -> Unit) {
+    Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
+        Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            Text(stringResource(R.string.device_notice_title), style = MaterialTheme.typography.titleMedium, color = CautionColor)
+            Text(stringResource(R.string.device_notice_text, model.ifBlank { "?" }), style = MaterialTheme.typography.bodyMedium)
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Button(onClick = onDismiss, modifier = BigButton) { Text(stringResource(R.string.device_notice_dismiss)) }
+                TextButton(onClick = onAllow, modifier = BigButton) { Text(stringResource(R.string.device_notice_allow)) }
+            }
+        }
+    }
+}
+
+@Composable
+private fun dbHeader(d: DbUi): String =
+    if (d.dbVersion > 0) stringResource(R.string.db_header, d.dbVersion, formatIsoDate(d.publishedAt)) else stringResource(R.string.db_version_unversioned)
+
+/** "2026-11-09T07:00:00Z" -> localized date. Falls back to the raw text. */
+private fun formatIsoDate(iso: String): String =
+    runCatching { DateFormat.getDateInstance(DateFormat.MEDIUM).format(Date(java.time.Instant.parse(iso).toEpochMilli())) }.getOrDefault(iso.take(10))
+
+/** Opens a link in the browser. The app itself sends nothing. */
+private fun openUrl(context: android.content.Context, url: String) {
+    try {
+        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+    } catch (_: ActivityNotFoundException) {
     }
 }
 

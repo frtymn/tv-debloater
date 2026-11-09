@@ -1,0 +1,66 @@
+name: Package result report
+description: Tell us how a package behaved on your device after you disabled or removed it. The app's "Report result" button fills in the first fields for you.
+title: "[Result] "
+labels: [package-result]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks. Reports like this are how the package list gets better. Maintainers review them and publish a new package database; see CONTRIBUTING.md. The app sent nothing by itself: it only opened this page.
+  - type: input
+    id: package
+    attributes:
+      label: Package name
+      placeholder: "com.example.package"
+    validations:
+      required: true
+  - type: input
+    id: current
+    attributes:
+      label: Level shown in the app
+      description: SAFE, CAUTION or PROTECTED.
+    validations:
+      required: true
+  - type: input
+    id: db_version
+    attributes:
+      label: Package database version
+      description: Settings > Package database.
+  - type: input
+    id: app_version
+    attributes:
+      label: App version
+  - type: input
+    id: device
+    attributes:
+      label: Device model (ro.product.model)
+      placeholder: "MiTV-AESP0"
+    validations:
+      required: true
+  - type: input
+    id: android
+    attributes:
+      label: Android version
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I disabled the package
+        - label: I removed the package (uninstall for user 0)
+        - label: Restoring it from History worked
+        - label: Something broke (describe below)
+  - type: textarea
+    id: what_did
+    attributes:
+      label: What did you do?
+      description: For example "Light profile, then disabled this one package".
+    validations:
+      required: true
+  - type: textarea
+    id: what_happened
+    attributes:
+      label: What happened?
+      description: Did anything stop working (home screen, remote, voice, casting, Play Store, updates)? How long did you use it like this?
+    validations:
+      required: true

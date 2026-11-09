@@ -82,6 +82,9 @@ object DemoData {
             storageBefore = StorageInfo(totalKb = 4_683_000, usedKb = 3_310_000, availableKb = 1_373_000),
             storageAfter = StorageInfo(totalKb = 4_683_000, usedKb = 3_302_000, availableKb = 1_381_000),
             batches = listOf(undo, first),
+            dbVersion = 3,
+            dbPublishedAt = "2026-11-09T07:00:00Z",
+            dbCheckedAt = T2,
         )
     }
 }

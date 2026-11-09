@@ -32,7 +32,16 @@ fun App(vm: MainViewModel) {
             "NOTHING_TO_UNDO" -> context.getString(R.string.nothing_to_undo)
             "NOTHING_TO_RESTORE" -> context.getString(R.string.nothing_to_restore)
             "NOTHING_APPLICABLE" -> context.getString(R.string.nothing_applicable)
-            else -> m
+            "DB_UP_TO_DATE" -> context.getString(R.string.db_up_to_date)
+            "DB_NEEDS_APP" -> context.getString(R.string.db_needs_app)
+            "DB_OFFLINE" -> context.getString(R.string.db_offline)
+            "DB_RATE_LIMITED" -> context.getString(R.string.db_rate_limited)
+            "DB_FAILED" -> context.getString(R.string.db_failed)
+            "DB_RESET" -> context.getString(R.string.db_reset_done)
+            else -> if (m.startsWith("DB_UPDATED:")) {
+                val n = m.split(":").drop(1).map { it.toIntOrNull() ?: 0 }
+                context.getString(R.string.db_updated, n.getOrElse(0) { 0 }, n.getOrElse(1) { 0 })
+            } else m
         }
         snackbar.showSnackbar(text)
         vm.clearMessage()

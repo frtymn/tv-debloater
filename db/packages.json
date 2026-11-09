@@ -1,6 +1,13 @@
 {
-  "version": 1,
+  "schemaVersion": 2,
+  "dbVersion": 1,
+  "publishedAt": "2026-11-09T12:00:00Z",
+  "minAppVersion": "1.2.0",
   "device": "Xiaomi Mi TV Stick MDZ-24-AA (MiTV-AESP0, aquaman), Android TV 9",
+  "devices": [
+    "MiTV-AESP0",
+    "MDZ-24-AA"
+  ],
   "packages": [
     {
       "packageName": "com.miui.tv.analytics",

@@ -3,6 +3,7 @@ package com.frtymn.tvdebloater.ui
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.frtymn.tvdebloater.BuildConfig
 import com.frtymn.tvdebloater.adb.AdbError
 import com.frtymn.tvdebloater.adb.AdbErrorKind
 import com.frtymn.tvdebloater.adb.AdbManager
@@ -11,10 +12,12 @@ import com.frtymn.tvdebloater.adb.SubnetScanner
 import com.frtymn.tvdebloater.core.Classifier
 import com.frtymn.tvdebloater.core.CommandBuilder
 import com.frtymn.tvdebloater.core.MemInfo
+import com.frtymn.tvdebloater.core.PackageDatabase
 import com.frtymn.tvdebloater.core.PackageEntry
 import com.frtymn.tvdebloater.core.PackageListParser
 import com.frtymn.tvdebloater.core.PkgAction
 import com.frtymn.tvdebloater.core.PkgState
+import com.frtymn.tvdebloater.core.ReportLink
 import com.frtymn.tvdebloater.core.SafetyLevel
 import com.frtymn.tvdebloater.core.StorageInfo
 import com.frtymn.tvdebloater.data.AppStore
@@ -23,8 +26,16 @@ import com.frtymn.tvdebloater.data.BatchEntry
 import com.frtymn.tvdebloater.data.BatchKind
 import com.frtymn.tvdebloater.data.PackageDbLoader
 import com.frtymn.tvdebloater.data.SavedDevice
+import com.frtymn.tvdebloater.db.ActiveDb
+import com.frtymn.tvdebloater.db.DbCheckResult
+import com.frtymn.tvdebloater.db.DbSource
+import com.frtymn.tvdebloater.db.DbStore
+import com.frtymn.tvdebloater.db.DbUpdater
+import com.frtymn.tvdebloater.db.UrlConnectionClient
 import com.frtymn.tvdebloater.demo.DemoData
 import com.frtymn.tvdebloater.demo.DemoSnapshot
+import android.util.Log
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,6 +43,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
 import java.util.Locale
 import java.util.UUID
 
@@ -85,6 +98,24 @@ data class RunState(
 
 data class ScanState(val running: Boolean = false, val done: Int = 0, val total: Int = 0, val found: List<String> = emptyList(), val finished: Boolean = false, val noWifi: Boolean = false)
 
+/** What the Settings "Package database" section and the package list header show. */
+data class DbUi(
+    val dbVersion: Int = 0,
+    val publishedAt: String = "",
+    val source: DbSource = DbSource.BUNDLED,
+    val lastCheckedAt: Long = 0,
+    val safe: Int = 0,
+    val caution: Int = 0,
+    val protected: Int = 0,
+    val autoUpdate: Boolean = true,
+    val checking: Boolean = false,
+    val needsAppUpdate: Boolean = false,
+    /** Debug/log details of the last check (incl. rejected entries). */
+    val lastResult: String = "",
+    val lastRejected: Int = 0,
+    val confirmReset: Boolean = false,
+)
+
 data class UiState(
     val screen: Screen = Screen.CONNECT,
     val ready: Boolean = false,
@@ -106,17 +137,28 @@ data class UiState(
     val run: RunState? = null,
     val message: String? = null,
     val showAggressiveWarning: Boolean = false,
+    val db: DbUi = DbUi(),
+    /** False when the connected model is not in the database "devices" list. */
+    val deviceVerified: Boolean = true,
+    val showDeviceNotice: Boolean = false,
+    /** The aggressive profile is off on unverified devices until the user allows it. */
+    val aggressiveAllowed: Boolean = true,
     /** Debug-only demo mode: sample data, nothing is ever sent over ADB. */
     val demo: Boolean = false,
 )
 
 class MainViewModel(app: Application) : AndroidViewModel(app) {
 
+    private companion object { const val TAG = "TvDebloater" }
+
     private val store = AppStore(app)
     private val adb = AdbManager(app.filesDir)
     private val scanner = SubnetScanner(app)
-    private val db = PackageDbLoader.load(app)
-    private val classifier = Classifier(db)
+    private val bundledDb = PackageDbLoader.load(app)
+    private val dbStore = DbStore(File(app.filesDir, "packagedb"))
+    private val updater = DbUpdater(dbStore, UrlConnectionClient(), BuildConfig.VERSION_NAME)
+    private var activeDb: ActiveDb = runCatching { dbStore.loadActive(bundledDb) }.getOrElse { ActiveDb(bundledDb, DbSource.BUNDLED) }
+    private var classifier = Classifier(activeDb.db)
     private val turkish get() = Locale.getDefault().language == "tr"
 
     private val _state = MutableStateFlow(UiState())
@@ -124,8 +166,17 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     private var scanJob: Job? = null
     private var connectJob: Job? = null
+    private var dbJob: Job? = null
 
     init {
+        _state.update { it.copy(db = dbUi(it.db)) }
+        viewModelScope.launch {
+            store.dbAutoUpdate.collect { v -> _state.update { if (it.demo) it else it.copy(db = it.db.copy(autoUpdate = v)) } }
+        }
+        // App start: check at most every 6 hours, only when automatic updates are on.
+        dbJob = viewModelScope.launch {
+            if (store.dbAutoUpdate.first() && withContext(Dispatchers.IO) { updater.isDue(System.currentTimeMillis()) }) runDbCheck(manual = false)
+        }
         viewModelScope.launch {
             val done = store.onboardingDone.first()
             _state.update { if (it.demo) it.copy(ready = true) else it.copy(onboardingDone = done, screen = if (done) Screen.CONNECT else Screen.ONBOARDING, ready = true) }
@@ -170,7 +221,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun loadDemo() {
         val d = DemoData.snapshot() ?: return
         demoData = d
-        connectJob?.cancel(); scanJob?.cancel()
+        connectJob?.cancel(); scanJob?.cancel(); dbJob?.cancel()
         val items = d.packages.map { (pkg, st) -> toItem(pkg, st) }
             .sortedWith(compareBy<PkgItem>({ it.level.ordinal }, { it.label.lowercase() }))
         _state.update {
@@ -179,6 +230,11 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                 devices = d.savedDevices, packages = items, selected = emptySet(), query = "", filter = Filter.ALL,
                 mem = d.memBefore, storage = d.storageBefore, batches = d.batches, confirm = null, run = null,
                 loadingPackages = false, packagesError = null, scan = ScanState(),
+                db = dbUi(DbUi()).copy(
+                    dbVersion = d.dbVersion, publishedAt = d.dbPublishedAt, source = DbSource.DOWNLOADED, lastCheckedAt = d.dbCheckedAt, checking = false,
+                    autoUpdate = true, needsAppUpdate = false, lastResult = "updated to ${d.dbVersion}: +2 new, 3 changed, 1 rejected", lastRejected = 1,
+                ),
+                deviceVerified = true, showDeviceNotice = false, aggressiveAllowed = true,
             )
         }
     }
@@ -237,6 +293,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                 val info = adb.connect(h, port)
                 store.rememberDevice(SavedDevice(h, port, info.model, System.currentTimeMillis()))
                 _state.update { it.copy(conn = ConnState.Connected(info), screen = Screen.PACKAGES, selected = emptySet()) }
+                updateDeviceAwareness(info.model)
                 refreshPackages()
             } catch (e: AdbError) {
                 _state.update { it.copy(conn = ConnState.Failed(e.kind, e.detail, h, port)) }
@@ -256,8 +313,10 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         adb.disconnect()
         val wasDemo = _state.value.demo
         demoData = null
-        _state.update { it.copy(demo = false, conn = ConnState.Idle, screen = Screen.CONNECT, packages = emptyList(), selected = emptySet(), mem = null, storage = null) }
-        if (wasDemo) _state.update { it.copy(devices = store.devices.first(), batches = store.batches.first().sortedByDescending { b -> b.timestamp }) }
+        _state.update { it.copy(demo = false, conn = ConnState.Idle, screen = Screen.CONNECT, packages = emptyList(), selected = emptySet(), mem = null, storage = null, deviceVerified = true, showDeviceNotice = false, aggressiveAllowed = true) }
+        if (wasDemo) _state.update {
+            it.copy(devices = store.devices.first(), batches = store.batches.first().sortedByDescending { b -> b.timestamp }, db = dbUi(DbUi()).copy(autoUpdate = store.dbAutoUpdate.first()))
+        }
     }
 
     fun forgetDevice(d: SavedDevice) = viewModelScope.launch { store.forgetDevice(d) }
@@ -368,7 +427,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         s.copy(selected = s.packages.filter { it.level == SafetyLevel.SAFE && it.state == PkgState.ENABLED }.map { it.packageName }.toSet(), filter = Filter.ALL)
     }
 
-    fun requestAggressiveProfile() = _state.update { it.copy(showAggressiveWarning = true) }
+    fun requestAggressiveProfile() = _state.update { if (it.aggressiveAllowed) it.copy(showAggressiveWarning = true) else it }
     fun dismissAggressiveWarning() = _state.update { it.copy(showAggressiveWarning = false) }
 
     /** Aggressive profile: SAFE + the CAUTION packages flagged as aggressive candidates. */
@@ -539,6 +598,109 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun closeResults() = _state.update { it.copy(run = null, screen = if (it.conn is ConnState.Connected) Screen.PACKAGES else Screen.CONNECT) }
+
+    // ---------------- package database ----------------
+
+    private fun dbUi(old: DbUi): DbUi {
+        val d = activeDb.db
+        val meta = runCatching { dbStore.readMeta() }.getOrNull()
+        return old.copy(
+            dbVersion = d.dbVersion, publishedAt = d.publishedAt, source = activeDb.source,
+            safe = d.packages.count { it.level == SafetyLevel.SAFE }, caution = d.packages.count { it.level == SafetyLevel.CAUTION },
+            protected = d.packages.count { it.level == SafetyLevel.PROTECTED },
+            lastCheckedAt = meta?.lastCheckedAt ?: 0, needsAppUpdate = meta?.needsAppUpdate == true,
+            lastResult = meta?.lastResult ?: "", lastRejected = meta?.lastRejectedEntries ?: 0,
+        )
+    }
+
+    /** Is [model] one of the devices the active database was verified on? */
+    private fun isVerified(db: PackageDatabase, model: String): Boolean =
+        db.devices.isEmpty() || db.devices.any { it.trim().equals(model.trim(), ignoreCase = true) }
+
+    private suspend fun updateDeviceAwareness(model: String) {
+        val verified = isVerified(activeDb.db, model)
+        val dismissed = model in store.deviceNoticeDismissed.first()
+        val allowed = verified || model in store.aggressiveAllowed.first()
+        _state.update { it.copy(deviceVerified = verified, showDeviceNotice = !verified && !dismissed, aggressiveAllowed = allowed) }
+    }
+
+    fun dismissDeviceNotice() {
+        val model = (_state.value.conn as? ConnState.Connected)?.info?.model ?: return
+        _state.update { it.copy(showDeviceNotice = false) }
+        if (!_state.value.demo) viewModelScope.launch { store.dismissDeviceNotice(model) }
+    }
+
+    /** Lets the user use the aggressive profile on an unverified device after reading the notice. */
+    fun allowAggressiveProfile() {
+        val model = (_state.value.conn as? ConnState.Connected)?.info?.model ?: return
+        _state.update { it.copy(aggressiveAllowed = true, showDeviceNotice = false) }
+        if (!_state.value.demo) viewModelScope.launch { store.allowAggressive(model); store.dismissDeviceNotice(model) }
+    }
+
+    fun setDbAutoUpdate(v: Boolean) {
+        if (_state.value.demo) _state.update { it.copy(db = it.db.copy(autoUpdate = v)) } else viewModelScope.launch { store.setDbAutoUpdate(v) }
+    }
+
+    /** "Check for database updates" button. */
+    fun checkDbNow() {
+        if (_state.value.db.checking) return
+        if (_state.value.demo) { showMessage("DB_UPDATED:2:3"); return }
+        dbJob?.cancel()
+        dbJob = viewModelScope.launch { runDbCheck(manual = true) }
+    }
+
+    private suspend fun runDbCheck(manual: Boolean) {
+        _state.update { it.copy(db = it.db.copy(checking = true)) }
+        val before = activeDb
+        val r = withContext(Dispatchers.IO) { runCatching { updater.check(before, System.currentTimeMillis()) }.getOrElse { DbCheckResult.Failed(it.javaClass.simpleName) } }
+        if (_state.value.demo) return
+        Log.i(TAG, "Package database check: ${dbStore.readMeta().lastResult}")
+        if (r is DbCheckResult.Updated) applyDb(r.active)
+        _state.update { it.copy(db = dbUi(it.db).copy(checking = false)) }
+        val msg = when (r) {
+            is DbCheckResult.Updated -> "DB_UPDATED:${r.added}:${r.changed}"
+            DbCheckResult.UpToDate -> if (manual) "DB_UP_TO_DATE" else null
+            DbCheckResult.NeedsAppUpdate -> if (manual) "DB_NEEDS_APP" else null
+            DbCheckResult.Offline -> if (manual) "DB_OFFLINE" else null
+            DbCheckResult.RateLimited -> if (manual) "DB_RATE_LIMITED" else null
+            is DbCheckResult.Failed -> if (manual) "DB_FAILED" else null
+        }
+        msg?.let { showMessage(it) }
+    }
+
+    /** Swaps the active database. Only labels, descriptions and profiles change; nothing is run. */
+    private suspend fun applyDb(next: ActiveDb) {
+        activeDb = next
+        classifier = Classifier(next.db)
+        _state.update { s ->
+            val items = s.packages.map { toItem(it.packageName, it.state) }
+                .sortedWith(compareBy<PkgItem>({ it.level.ordinal }, { it.label.lowercase() }))
+            s.copy(packages = items, selected = s.selected.filter { p -> items.any { it.packageName == p && it.level != SafetyLevel.PROTECTED } }.toSet())
+        }
+        (_state.value.conn as? ConnState.Connected)?.info?.model?.let { updateDeviceAwareness(it) }
+    }
+
+    fun requestDbReset() = _state.update { it.copy(db = it.db.copy(confirmReset = true)) }
+    fun dismissDbReset() = _state.update { it.copy(db = it.db.copy(confirmReset = false)) }
+
+    /** "Reset to bundled list": deletes downloaded databases. History is not touched. */
+    fun resetDb() {
+        _state.update { it.copy(db = it.db.copy(confirmReset = false)) }
+        if (_state.value.demo) { _state.update { it.copy(db = it.db.copy(source = DbSource.BUNDLED, dbVersion = bundledDb.dbVersion, publishedAt = bundledDb.publishedAt)) }; showMessage("DB_RESET"); return }
+        dbJob?.cancel()
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) { dbStore.reset(System.currentTimeMillis()) }
+            applyDb(ActiveDb(bundledDb, DbSource.BUNDLED))
+            _state.update { it.copy(db = dbUi(it.db).copy(checking = false)) }
+            showMessage("DB_RESET")
+        }
+    }
+
+    /** Prefilled GitHub issue for "how did this package behave on my device". Opened in the browser. */
+    fun reportUrl(p: PkgItem): String {
+        val info = (_state.value.conn as? ConnState.Connected)?.info
+        return ReportLink.build(p.packageName, p.level, _state.value.db.dbVersion, BuildConfig.VERSION_NAME, info?.model ?: "", info?.androidVersion ?: "")
+    }
 
     // ---------------- export / import ----------------
 

@@ -13,6 +13,7 @@ Android TV'deki hazır uygulamaları telefonunuzdan kapatın. Root yok, bilgisay
   <a href="https://github.com/frtymn/tv-debloater/releases">Sürümler</a> ·
   <a href="#nasıl-çalışır">Nasıl çalışır</a> ·
   <a href="#güvenlik">Güvenlik</a> ·
+  <a href="#paket-veritabanı">Paket veritabanı</a> ·
   <a href="#sorun-giderme">Sorun giderme</a> ·
   <a href="#katkıda-bulunma">Katkıda bulunma</a>
 </p>
@@ -41,6 +42,8 @@ Neyi kapatacağınızı siz seçersiniz ve her değişiklik geri alınabilir. Ro
 - **Tümünü geri yükle.** Tek düğme, uygulamanın değiştirdiği her şeyi yeniden açar.
 - **Profiller.** "Hafif" GÜVENLİ uygulamaları seçer. "Agresif" bazı DİKKAT uygulamalarını da uyarıyla ekler. Onayı yine siz verirsiniz.
 - **Öncesi ve sonrası.** Boş RAM ve `/data` alanı, TV üzerinde ölçülür.
+- **Yeni APK olmadan paket listesi güncellemesi.** Güvenlik veritabanı bu depodan indirilir, sıkı biçimde denetlenir ve istenirse uygulamayla gelen kopyaya geri döndürülebilir. Güncelleme yalnızca adları, açıklamaları ve profilleri değiştirir; TV'de hiçbir şeyi değiştirmez.
+- **Sonucu bildirin.** Her paketin, tarayıcınızda önceden doldurulmuş bir GitHub issue'su açan "Sonucu bildir" düğmesi vardır.
 - **Türkçe ve İngilizce.** Uygulama telefonunuzun dilini kullanır.
 
 ## Başlarken
@@ -56,6 +59,9 @@ Neyi kapatacağınızı siz seçersiniz ve her değişiklik geri alınabilir. Ro
 Yeni APK'yı [Sürümler](https://github.com/frtymn/tv-debloater/releases/latest) sayfasından indirip eskisinin üzerine kurun. Geçmişiniz ve kayıtlı cihazlarınız korunur.
 v0.1.1 ve sonraki sürümler aynı debug anahtarıyla imzalanır. v0.1.0 farklı bir anahtar kullandığı için Android onu güncellemez: önce v0.1.0'ı kaldırın. Kaldırmak uygulamanın geçmişini siler, bu yüzden önce dışa aktarın (Geçmiş > Dışa aktar).
 
+Paket listesi yeni bir APK olmadan kendi kendine güncellenir: uygulama açılışında (en fazla 6 saatte bir) ya da Ayarlar > Paket veritabanı > "Veritabanı güncellemelerini denetle"ye dokunduğunuzda. Otomatik kontrolleri durdurmak için "Paket listesini otomatik güncelle"yi kapatın.
+Uygulama "En yeni paket listesi için uygulamayı güncelleyin" diyorsa yeni liste daha yeni bir uygulama sürümü gerektirir; mevcut liste çalışmaya devam eder.
+
 ## Ekran görüntüleri
 
 Ekran görüntüleri örnek verilerle oluşturulmuştur.
@@ -70,13 +76,18 @@ Ekran görüntüleri örnek verilerle oluşturulmuştur.
   <img src="docs/screenshots/05-results-tr.png" alt="Öncesi ve sonrası RAM ve depolama ile sonuçlar" width="30%">
   <img src="docs/screenshots/06-history-tr.png" alt="Geri alma ile geçmiş" width="30%">
 </p>
+<p align="center">
+  <img src="docs/screenshots/07-database-tr.png" alt="Ayarlar: paket veritabanı sürümü, kaynağı, son kontrol, güncelleme düğmesi ve anahtarı" width="30%">
+  <img src="docs/screenshots/08-unverified-device-tr.png" alt="Listenin doğrulanmadığı bir cihaz için uyarı; agresif profil kapalı" width="30%">
+</p>
 
 ## Nasıl çalışır
 
 ```mermaid
 flowchart TD
     A["Telefon: TV Debloater"] -->|"Wi-Fi, TCP üzerinden ADB (dadb), port 5555"| B["Android TV"]
-    D[("Uygulamayla gelen güvenlik veritabanı<br/>assets/packages.json")] --> A
+    D[("Uygulamayla gelen güvenlik veritabanı<br/>db/packages.json")] --> A
+    G[("Daha yeni veritabanı (isteğe bağlı)<br/>raw.githubusercontent.com, db dalı")] -.->|"HTTPS, denetlenir"| A
     E["Koda gömülü korumalı liste<br/>ProtectedGuard.kt"] --> A
     B --> C1["pm disable-user --user 0 paket"]
     B --> C2["pm uninstall -k --user 0 paket"]
@@ -85,7 +96,7 @@ flowchart TD
 
 - Uygulama TV ile saf Kotlin bir ADB istemcisi olan [dadb](https://github.com/mobile-dev-inc/dadb) üzerinden konuşur. ADB anahtarı uygulamanın özel depolama alanında kalır.
 - Paket listelerini `pm list packages` ile, RAM ve depolamayı `dumpsys meminfo` ve `df /data` ile okur.
-- Her paketin adı uygulamayla gelen veritabanından gelir. Veritabanında olmayan paket "Bilinmiyor" olarak gösterilir ve DİKKAT sayılır.
+- Her paketin adı etkin veritabanından gelir: tüm kontrollerden geçmiş en yeni indirilen veritabanı ya da uygulamayla gelen. Veritabanında olmayan paket "Bilinmiyor" olarak gösterilir ve DİKKAT sayılır.
 - Her komut gönderilmeden önce koda gömülü koruma paketi yeniden kontrol eder. Veritabanı dosyası değiştirilmiş olsa bile korumalı paket reddedilir.
 - Uygulama yalnızca kullanıcı 0 için paket durumunu değiştirir. Root, yazılım yükleme (flashing) veya kullanıcı verisi silme yapmaz.
 
@@ -97,11 +108,23 @@ Android 11+ ile gelen eşleştirme kodlu "Kablosuz hata ayıklama" henüz destek
 - **Varsayılan olarak geri alınabilir.** Varsayılan işlem `pm disable-user`'dır. Uygulama TV'de kalır ve yeniden açılabilir.
 - **"Kullanıcıdan kaldır" isteğe bağlıdır.** `pm uninstall -k --user 0` çalıştırır. Uygulama sistem imajında kalır, `cmd package install-existing` onu geri getirir. Önce bir uyarı görürsünüz.
 - **Korumalı paketlere asla dokunulmaz.** Başlatıcı, Play Store, Play Hizmetleri, kurulum sihirbazı, sistem arayüzü, ayarlar, Bluetooth ve kumanda servisleri, klavyeler, ağ servisleri, ADB kabuğu ve Xiaomi güncelleme ve eşleştirme servisleri bunlara dahildir.
-- **GÜVENLİ için kanıt gerekir.** Bir paket, yalnızca Mi TV Stick için yayınlanmış debloat listeleri onu kapatıyorsa GÜVENLİ sayılır. Her girdi kaynaklarını gösterir.
+- **GÜVENLİ için kanıt gerekir.** Bir paket ancak iki herkese açık kaynakla (onu kapatan Mi TV Stick debloat listeleri) ya da bir kaynak ve gerçek cihazda kayıtlı bir denemeyle GÜVENLİ sayılır. Her girdi kaynaklarını gösterir.
+- **Veritabanı güncellemesi TV'de hiçbir şeyi değiştirmez.** İndirilen paket listesi adları ve profillerin neyi seçeceğini değiştirebilir. Hiçbir komut çalıştırmaz ve koda gömülü korumalı listedeki bir paketi asla seçilebilir yapamaz.
 - **Siz onaylamadan hiçbir şey çalışmaz.** Deneme modu ilk açılışta açıktır ve her işlem grubu, komutların tamamını listeleyen bir onay penceresi gösterir.
 - **Önce yedek.** Geçmiş kaydı ilk komut çalışmadan önce kaydedilir.
 - **Nasıl geri alınır.** Geçmiş > "İşlemi geri al" ya da menüdeki "Tümünü geri yükle". Sonra TV'yi yeniden başlatın.
 - **Son çare.** Fabrika ayarlarına sıfırlama tüm sistem uygulamalarını geri getirir. Hesaplarınızı ve kurduğunuz uygulamaları da siler. Ayarlar > Cihaz Tercihleri > Sıfırla'yı kullanın. Menü açılmıyorsa çubuğun gücünü çekin, kumandada OK + Geri tuşlarını basılı tutarak gücü yeniden takın ve "Wipe data / factory reset"i seçin ([Xiaomi destek](https://www.mi.com/uk/support/faq/details/KA-557214/)).
+
+## Paket veritabanı
+
+Güvenlik etiketleri bu depodaki `db/packages.json` dosyasından gelir. Uygulama bunun bir kopyasıyla gelir ve daha yeni sürümleri yeni bir APK olmadan indirebilir.
+
+- **Kaynak.** Yayınlanan sürümler [`db` dalında](https://github.com/frtymn/tv-debloater/tree/db) durur: `db/manifest.json` (sürüm, tarih, boyut, SHA-256, sayılar) ve `db/packages.json`. Uygulama yalnızca `https://raw.githubusercontent.com/frtymn/tv-debloater/db/db/manifest.json` adresini ve onun gösterdiği dosyayı okur. Veritabanı güncellemeleri GitHub Release değildir.
+- **Uygulamadaki doğrulama.** Yalnızca HTTPS ve izin listesindeki bir adres. Uygulama önce manifest'e bakar (ETag ile) ve listeyi yalnızca `dbVersion` daha yeniyse indirir. Boyutu ve SHA-256'yı doğrular, sonra dosyayı sıkı biçimde denetler: en fazla 1 MB, UTF-8, bilinen şema, geçerli paket adları, GÜVENLİ/DİKKAT/KORUMALI seviyeleri, uzunluk sınırları, yinelenen kayıt yok. Herhangi bir kontrolden geçemeyen dosya bütünüyle reddedilir. Koda gömülü korumalı listeyle çelişen kayıt atılır. Uygulama son iki iyi sürümü saklar ve uygulamayla gelen listeye geri döner. Ayarlar > Paket veritabanı > "Uygulamayla gelen listeye dön" ile istediğiniz zaman geri dönebilirsiniz.
+- **Daha yeni biçimler.** Liste daha yeni bir şema veya uygulama sürümü gerektiriyorsa uygulama mevcut listesini korur ve "En yeni paket listesi için uygulamayı güncelleyin" der.
+- **Cihazlar.** Liste Xiaomi Mi TV Stick MDZ-24-AA (`ro.product.model` = `MiTV-AESP0`) üzerinde doğrulanmıştır. Diğer modellerde uygulama bir kez gösterilen bir uyarı çıkarır ve siz izin verene kadar agresif profil kapalı kalır.
+- **Bildirme.** Bir paketteki "Sonucu bildir", tarayıcınızda önceden doldurulmuş bir [paket sonuç bildirimi](https://github.com/frtymn/tv-debloater/issues/new?template=package_result.yml) açar: paket, seviye, veritabanı sürümü, uygulama sürümü, cihaz modeli ve Android sürümü. Ne yaptığınızı ve ne olduğunu siz yazarsınız. Uygulama kendiliğinden hiçbir şey göndermez.
+- **Katkı.** `db/packages.json` dosyasını bir pull request ile düzenleyin. CI (`db.yml`, `tools/db_build.py`) dosyayı JSON Schema'ya ve koddaki korumalı listeye göre doğrular, GÜVENLİ kuralını kontrol eder. Bir bakımcı "Package database" iş akışıyla yayınlar. Ayrıntılar: [CONTRIBUTING.md](CONTRIBUTING.md#package-database).
 
 ## Sorun giderme
 
@@ -115,12 +138,14 @@ Android 11+ ile gelen eşleştirme kodlu "Kablosuz hata ayıklama" henüz destek
 ## Gizlilik ve izinler
 
 Uygulama hiçbir veri toplamaz. Reklam, analitik ve hesap yoktur.
-Yalnızca yerel ağınıza bağlanır: seçtiğiniz TV adresine ve "Ağda 5555 portunu tara"ya dokunduğunuzda telefonun Wi-Fi alt ağındaki (/24) adreslerin ADB portuna (varsayılan 5555).
-Geçmiş, kayıtlı cihazlar ve uygulamanın ADB anahtarı telefonunuzda, uygulamanın özel depolama alanında kalır. Dışa aktarma ve paylaşma yalnızca siz dokunduğunuzda olur.
+Yerel ağınızda seçtiğiniz TV adresine ve "Ağda 5555 portunu tara"ya dokunduğunuzda telefonun Wi-Fi alt ağındaki (/24) adreslerin ADB portuna (varsayılan 5555) bağlanır.
+Tek internet bağlantısı, daha yeni bir paket listesi olup olmadığına bakmak için `raw.githubusercontent.com` adresinedir (uygulama açılışında en fazla 6 saatte bir ya da düğmeye dokunduğunuzda). İstek sade bir HTTPS indirmesidir: kimlik, analitik veya cihaz bilgisi gönderilmez. Otomatik kontrolleri durdurmak için Ayarlar > Paket veritabanı > "Paket listesini otomatik güncelle"yi kapatın.
+"Sonucu bildir" yalnızca tarayıcınızda GitHub'ı açar; uygulamanın kendisi hiçbir şey göndermez.
+Geçmiş, kayıtlı cihazlar, indirilen paket listeleri ve uygulamanın ADB anahtarı telefonunuzda, uygulamanın özel depolama alanında kalır. Dışa aktarma ve paylaşma yalnızca siz dokunduğunuzda olur.
 
 Manifest'teki izinler:
 
-- `INTERNET`: her ağ bağlantısı için gerekir; burada yalnızca TV'ye TCP üzerinden ADB ve isteğe bağlı tarama için kullanılır.
+- `INTERNET`: her ağ bağlantısı için gerekir: TV'ye TCP üzerinden ADB, isteğe bağlı tarama ve `raw.githubusercontent.com` üzerindeki paket listesi kontrolü.
 - `ACCESS_NETWORK_STATE`: taramanın hangi alt ağa bakacağını bilmesi için telefonun kendi Wi-Fi adresini okur.
 
 v0.1.0 ayrıca kullanmadığı `ACCESS_WIFI_STATE` iznini de bildiriyordu. Bu izin v0.1.1'de kaldırıldı.
@@ -142,7 +167,8 @@ JDK 17 gerekir. Gradle wrapper geri kalan her şeyi indirir.
 APK `app/build/outputs/apk/debug/` klasörüne çıkar.
 Bilgisayarınız yok mu? Depoyu fork'layın: GitHub Actions her push'ta APK'yı derler ve indirilebilir bir artifact olarak saklar.
 
-- `build.yml`: depo kontrolleri (`tools/repo_checks.py`), birim testleri, gizli bilgi taraması ve debug APK. `v0.1.1` gibi etiketler bir GitHub Release oluşturur.
+- `build.yml`: depo kontrolleri (`tools/repo_checks.py`), birim testleri, gizli bilgi taraması ve debug APK. `v1.2.0` gibi etiketler bir GitHub Release oluşturur.
+- `db.yml`: paket veritabanını her değişiklikte doğrular; elle çalıştırıldığında `db` dalına yayınlar.
 - `e2e.yml`: gerçek uygulamayı bir Android TV 9 emülatörüne karşı çalıştırır.
 - `docs-images.yml`: ekran görüntülerini, kapak görselini ve sosyal önizlemeyi üretir. Actions sekmesinden çalıştırın.
 
@@ -153,6 +179,7 @@ Sabitlenmiş sürümler: Gradle 8.9, AGP 8.7.3, Kotlin 2.0.21, Compose BOM 2024.
 Issue ve pull request'ler memnuniyetle karşılanır. Büyük değişiklikler için önce bir issue açın.
 
 - Yanlış güvenlik etiketi mi? Bir [paket güvenlik bildirimi](https://github.com/frtymn/tv-debloater/issues/new?template=package_safety.yml) açın. GÜVENLİ için herkese açık bir kaynak gerekir.
+- Bir paketi TV'nizde denediniz mi? Uygulamadaki "Sonucu bildir"i kullanın ya da bir [paket sonuç bildirimi](https://github.com/frtymn/tv-debloater/issues/new?template=package_result.yml) açın.
 - Hata mı buldunuz? TV modeli, Android sürümü ve ham çıktıyla bir [hata bildirimi](https://github.com/frtymn/tv-debloater/issues/new?template=bug_report.yml) açın.
 - Güvenlik sorunu mu? [SECURITY.md](SECURITY.md) dosyasında anlatıldığı gibi gizli olarak bildirin.
 

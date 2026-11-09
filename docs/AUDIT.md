@@ -8,6 +8,25 @@ package database, dependencies and Actions, tests, secrets, leftovers, repo meta
 `tools/repo_checks.py` (CI job `repo-checks`) automates the README, strings, permission,
 database and tag/version checks.
 
+## 2026-11-09 · v1.2.0
+
+Checked: the full list. Tag v1.2.0 = VERSION_NAME = docs/release-notes/v1.2.0.md (newest); dev builds
+are 1.2.1-dev.N. Both READMEs (15 images each, new "Package database" section), 164 string keys,
+SECURITY/CONTRIBUTING/templates/PR template, manifest (INTERNET, ACCESS_NETWORK_STATE, no new ones),
+db/packages.json (98 entries, schema 2, every SAFE has 2+ sources, no guard conflict), gitleaks clean.
+
+Fixed:
+- The bundled database is no longer a second hand-kept file: Gradle copies db/packages.json into the
+  APK, and CI compares the APK copy byte for byte (no drift, editable from the GitHub web editor).
+- tools/gen_packages.py removed; tools/db_build.py (check/publish) replaces it, with a self-test.
+- CONTRIBUTING, SECURITY, PR template and bug template describe the database check, the SAFE rule,
+  the raw.githubusercontent.com exception and result reports; version examples point to 1.2.0.
+- repo_checks runs the database check; a duplicate import was removed.
+
+Left open:
+- The Settings log line ("last result") is English in both languages (technical log).
+- Gradle 8.9 / AGP 8.7.3 / Kotlin 2.0.21 / Compose BOM 2024.12.01 still behind; build green.
+
 ## 2026-11-09 · v0.1.1
 
 Checked: the full list. Tag v0.1.1 = VERSION_NAME = docs/release-notes/v0.1.1.md (newest);

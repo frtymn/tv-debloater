@@ -20,4 +20,8 @@ data class DemoSnapshot(
     val storageBefore: StorageInfo,
     val storageAfter: StorageInfo,
     val batches: List<Batch>,
+    /** Sample "downloaded" package database shown in Settings. */
+    val dbVersion: Int,
+    val dbPublishedAt: String,
+    val dbCheckedAt: Long,
 )

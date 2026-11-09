@@ -2,11 +2,12 @@ package com.frtymn.tvdebloater.data
 
 import android.content.Context
 import com.frtymn.tvdebloater.core.PackageDatabase
-import kotlinx.serialization.json.Json
+import com.frtymn.tvdebloater.db.DbValidator
 
+/** Loads the bundled assets/packages.json (copied from db/packages.json at build time), the permanent fallback. */
 object PackageDbLoader {
     fun load(context: Context): PackageDatabase = runCatching {
-        val text = context.assets.open("packages.json").bufferedReader(Charsets.UTF_8).use { it.readText() }
-        Json { ignoreUnknownKeys = true }.decodeFromString(PackageDatabase.serializer(), text)
-    }.getOrElse { PackageDatabase() } // the code guard still protects everything critical
+        val bytes = context.assets.open("packages.json").use { it.readBytes() }
+        (DbValidator.validate(bytes) as? DbValidator.Result.Ok)?.db
+    }.getOrNull() ?: PackageDatabase() // the code guard still protects everything critical
 }

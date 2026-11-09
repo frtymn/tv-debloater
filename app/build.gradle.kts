@@ -15,7 +15,7 @@ android {
         targetSdk = 34
         versionCode = (System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 1)
         // Tag builds set VERSION_NAME (v0.1.1 -> 0.1.1); other builds are dev builds of the next version.
-        versionName = System.getenv("VERSION_NAME") ?: ("0.1.2-dev." + (System.getenv("GITHUB_RUN_NUMBER") ?: "0"))
+        versionName = System.getenv("VERSION_NAME") ?: ("1.2.1-dev." + (System.getenv("GITHUB_RUN_NUMBER") ?: "0"))
     }
 
     // CI sets DEBUG_KEYSTORE_FILE to the fixed repository debug key, so every release is signed with
@@ -88,4 +88,31 @@ dependencies {
     testImplementation(libs.robolectric)
     testImplementation(libs.roborazzi)
     debugImplementation(libs.compose.ui.test.manifest)
+}
+
+/**
+ * The bundled package database is not kept in src/main/assets. It is copied at build time from
+ * db/packages.json, the single validated source (tools/db_build.py), so the two cannot drift.
+ * CI also compares the copy inside the APK with db/packages.json byte for byte.
+ */
+abstract class BundlePackageDb : DefaultTask() {
+    @get:InputFile abstract val source: RegularFileProperty
+    @get:OutputDirectory abstract val outputDir: DirectoryProperty
+
+    @TaskAction
+    fun copy() {
+        val out = outputDir.get().asFile
+        out.mkdirs()
+        source.get().asFile.copyTo(File(out, "packages.json"), overwrite = true)
+    }
+}
+
+val bundlePackageDb = tasks.register<BundlePackageDb>("bundlePackageDb") {
+    source.set(rootProject.layout.projectDirectory.file("db/packages.json"))
+}
+
+androidComponents {
+    onVariants { variant ->
+        variant.sources.assets?.addGeneratedSourceDirectory(bundlePackageDb, BundlePackageDb::outputDir)
+    }
 }

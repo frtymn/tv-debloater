@@ -1,7 +1,7 @@
 package com.frtymn.tvdebloater.core
 
 /**
- * Hard-coded safety net. This list lives in code on purpose: even if assets/packages.json is
+ * Hard-coded safety net. This list lives in code on purpose: even if the package database is
  * edited, a package matched here can never be disabled or removed by this app.
  * Restore actions (enable / install-existing) are always allowed, because they only help recovery.
  */

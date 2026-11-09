@@ -7,7 +7,7 @@ Fails when:
 - string keys differ between values/ and values-tr/, format arguments differ, a string is unused,
   or a string still contains TODO/FIXME/placeholder text;
 - a manifest permission is not explained in both READMEs;
-- packages.json is not valid JSON, has duplicates, or has an entry without sources;
+- the package database fails tools/db_build.py check (schema, guard, SAFE sources, bundled drift);
 - on a tag build (refs/tags/vX.Y.Z): VERSION_NAME is not X.Y.Z, or docs/release-notes/vX.Y.Z.md
   is missing or is not the newest release-notes file.
 Image sizes are checked by tools/check_images.py, which this script also runs.
@@ -88,20 +88,11 @@ for readme in ("README.md", "README.tr.md"):
             err(f"{readme}: permission {p} is not explained")
 ok(f"manifest permissions: {', '.join(perms)}")
 
-# 4) Package database.
-try:
-    db = json.load(open("app/src/main/assets/packages.json", encoding="utf-8"))
-    names = [p["packageName"] for p in db["packages"]]
-    if len(names) != len(set(names)):
-        err("packages.json has duplicate package names")
-    for p in db["packages"]:
-        if p.get("level") not in ("SAFE", "CAUTION", "PROTECTED"):
-            err(f"packages.json: {p['packageName']} has level {p.get('level')}")
-        if not p.get("sources"):
-            err(f"packages.json: {p['packageName']} has no sources")
-    ok(f"packages.json: {len(names)} entries (the guard overlap is tested in ProtectedGuardTest)")
-except Exception as e:  # noqa: BLE001
-    err(f"packages.json is not valid: {e}")
+# 4) Package database: db/packages.json is the source, the bundled asset must match it
+#    (tools/db_build.py check: schema, guard cross-check, SAFE-source rule, drift).
+r = subprocess.run([sys.executable, "tools/db_build.py", "check"], capture_output=True, text=True)
+for line in (r.stdout + r.stderr).strip().splitlines():
+    (ok if r.returncode == 0 else err)("db_build: " + line)
 
 # 5) Versions on tag builds.
 def semver(path):

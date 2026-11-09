@@ -71,6 +71,18 @@ abstract class ScreenshotBase(private val suffix: String, private val locale: Lo
     }
 
     @Test fun s6_history() = shoot("06-history") { vm -> vm.demoArrange { it.copy(screen = Screen.HISTORY) } }
+
+    @Test fun s7_database() = shoot("07-database") { vm ->
+        vm.demoArrange { it.copy(screen = Screen.SETTINGS) }
+        vm.checkDbNow() // demo: shows the "Package list updated" snackbar, nothing is downloaded
+    }
+
+    @Test fun s8_unverifiedDevice() = shoot("08-unverified-device") { vm ->
+        vm.demoArrange {
+            val info = (it.conn as ConnState.Connected).info.copy(model = "Chromecast", androidVersion = "12")
+            it.copy(conn = ConnState.Connected(info), deviceVerified = false, showDeviceNotice = true, aggressiveAllowed = false, dryRun = true)
+        }
+    }
 }
 
 @Config(sdk = [34], qualifiers = "en-w360dp-h800dp-xxhdpi")

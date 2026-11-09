@@ -21,11 +21,15 @@ In scope:
 
 - The app sending a command for a package it should refuse (for example a protected package).
 - Commands that differ from what the confirmation dialog showed.
-- The app talking to anything other than the TV address you entered (or, during "Scan network", the ADB port of addresses in your own Wi-Fi subnet), or to the internet.
+- The app talking to anything other than the TV address you entered (or, during "Scan network", the ADB port of addresses in your own Wi-Fi subnet).
+  The only internet access is the package-database check, a plain HTTPS GET to `raw.githubusercontent.com`. Any other host, plain http, or a followed redirect is in scope.
+- A downloaded package database that makes a guarded package selectable, gets past the size, hash or validation checks, or replaces the cached copy with a broken one.
+- A database update that sends any command to the TV.
 - Leaks of the app's ADB private key (stored in app-private storage).
 
 Out of scope:
 
 - A package in the safety database turning out to be needed on your firmware.
   This is a safety-database problem, not a security issue.
-  Please use the "Package safety report" issue form instead.
+  Please use the "Package safety report" or "Package result report" issue form instead.
+- Wrong labels in a published database update that the guard still blocks correctly.
