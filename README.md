@@ -54,7 +54,7 @@ You choose what to disable, and every change can be undone. You need no root and
 ### Updates
 
 Download the new APK from [Releases](https://github.com/frtymn/tv-debloater/releases/latest) and install it over the old one. Your history and saved devices stay.
-Releases from v0.1.0 on are signed with the same debug key. If Android refuses the update of an older build, uninstall it first. Uninstalling deletes the app's history, so export it first (History > Export).
+Releases from v0.1.1 on are signed with the same debug key. v0.1.0 used a different key, so Android refuses to update it: uninstall v0.1.0 first. Uninstalling deletes the app's history, so export it first (History > Export).
 
 ## Screenshots
 
@@ -123,7 +123,7 @@ Permissions in the manifest:
 - `INTERNET`: needed for any network socket, here only ADB over TCP to the TV and the optional scan.
 - `ACCESS_NETWORK_STATE`: reads the phone's own Wi-Fi address so the scan knows which subnet to check.
 
-v0.1.0 also declares `ACCESS_WIFI_STATE`, which it does not use. It is removed in the next release.
+v0.1.0 also declared `ACCESS_WIFI_STATE`, which it did not use. It was removed in v0.1.1.
 
 ## Disclaimer
 
@@ -142,7 +142,7 @@ You need JDK 17. The Gradle wrapper downloads everything else.
 The APK is in `app/build/outputs/apk/debug/`.
 No computer? Fork the repository: GitHub Actions builds the APK on every push and keeps it as a downloadable artifact.
 
-- `build.yml`: repository checks (`tools/repo_checks.py`), unit tests, a secret scan, and the debug APK. Tags like `v0.1.0` make a GitHub Release.
+- `build.yml`: repository checks (`tools/repo_checks.py`), unit tests, a secret scan, and the debug APK. Tags like `v0.1.1` make a GitHub Release.
 - `e2e.yml`: drives the real app against an Android TV 9 emulator.
 - `docs-images.yml`: renders the screenshots, hero image and social preview. Run it from the Actions tab.
 

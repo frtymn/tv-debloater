@@ -136,7 +136,7 @@
     <string name="dry_run_desc">Komutları çalıştırmadan tam olarak göster.</string>
     <string name="language_note">Dil, telefonun sistem dilini izler (Türkçe veya İngilizce).</string>
     <string name="about">Hakkında</string>
-    <string name="about_text">Reklam yok, analitik yok. Uygulama yalnızca yerel ağınıza bağlanır: seçtiğiniz TV\'ye ve Tara\'ya dokunduğunuzda Wi-Fi alt ağınızdaki adreslerin ADB portuna. Paket sınıflandırmaları herkese açık Mi TV Stick (MDZ-24-AA) listelerinden gelir; bilinmeyen paketler DİKKAT sayılır.</string>
+    <string name="about_text">Reklam yok, analitik yok. Uygulama yalnızca yerel ağınıza bağlanır: seçtiğiniz TV\'ye ve ağı taradığınızda Wi-Fi alt ağınızdaki adreslerin ADB portuna. Paket sınıflandırmaları herkese açık Mi TV Stick (MDZ-24-AA) listelerinden gelir; bilinmeyen paketler DİKKAT sayılır.</string>
     <string name="version">Sürüm %1$s</string>
     <string name="recovery_title">Bir şeyler ters giderse</string>
     <string name="recovery_text">1) Geçmiş > Geri al veya Tümünü geri yükle\'yi kullanın. 2) TV\'yi yeniden başlatın. 3) TV açılmıyorsa fabrika ayarlarına sıfırlayın: fişi çekin, kumandada OK + Geri tuşlarını basılı tutarak gücü yeniden takın ve Wipe data / factory reset seçin veya Ayarlar > Cihaz Tercihleri > Sıfırla\'yı kullanın. Fabrika sıfırlaması tüm sistem uygulamalarını geri getirir.</string>

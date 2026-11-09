@@ -67,7 +67,9 @@ jobs:
           DEBUG_KEYSTORE_B64: ${{ secrets.DEBUG_KEYSTORE_B64 }}
         run: |
           if [ -n "$DEBUG_KEYSTORE_B64" ]; then
-            mkdir -p ~/.android && echo "$DEBUG_KEYSTORE_B64" | base64 -d > ~/.android/debug.keystore && echo "Using the repository debug key"
+            echo "$DEBUG_KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/debug.keystore"
+            echo "DEBUG_KEYSTORE_FILE=$RUNNER_TEMP/debug.keystore" >> "$GITHUB_ENV"
+            echo "Using the repository debug key"
           else
             echo "No DEBUG_KEYSTORE_B64 secret: using a temporary debug key"
           fi
@@ -88,6 +90,24 @@ jobs:
             echo "::error::The APK versionName does not match the tag ${GITHUB_REF_NAME}"; exit 1
           fi
           rm badging.txt
+
+      # The SHA-256 of the repository debug key's certificate (public, not a secret).
+      # Releases must be signed with it, otherwise updates would not install over older versions.
+      - name: Check the signing key
+        env:
+          EXPECTED_CERT_SHA256: 8d2271aa7582310236c2d4a522ba01de868df9b5aac08a4f0de4120018c0db82
+        run: |
+          APKSIGNER=$(ls "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -1)
+          ACTUAL=$("$APKSIGNER" verify --print-certs app/build/outputs/apk/debug/app-debug.apk | grep -m1 "SHA-256 digest" | awk '{print $NF}')
+          echo "Signing certificate SHA-256: $ACTUAL"
+          if [ -n "${DEBUG_KEYSTORE_FILE:-}" ]; then
+            [ "$ACTUAL" = "$EXPECTED_CERT_SHA256" ] || { echo "::error::The APK is not signed with the repository debug key"; exit 1; }
+          elif [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            echo "::error::Release builds need the DEBUG_KEYSTORE_B64 secret"; exit 1
+          else
+            echo "No repository key (fork or pull request): temporary debug key, not checked"
+          fi
+          rm -f "$RUNNER_TEMP/debug.keystore"
 
       - name: Rename APK
         run: |
@@ -110,7 +130,7 @@ jobs:
           path: out/
           if-no-files-found: error
 
-      # Releases are made only from version tags (v0.1.0, ...). Notes come from docs/release-notes/<tag>.md.
+      # Releases are made only from version tags (v0.1.1, ...). Notes come from docs/release-notes/<tag>.md.
       - name: Publish GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v3

@@ -54,7 +54,7 @@ Neyi kapatacağınızı siz seçersiniz ve her değişiklik geri alınabilir. Ro
 ### Güncellemeler
 
 Yeni APK'yı [Sürümler](https://github.com/frtymn/tv-debloater/releases/latest) sayfasından indirip eskisinin üzerine kurun. Geçmişiniz ve kayıtlı cihazlarınız korunur.
-v0.1.0 ve sonraki sürümler aynı debug anahtarıyla imzalanır. Android daha eski bir sürümün güncellenmesini reddederse önce onu kaldırın. Kaldırmak uygulamanın geçmişini siler, bu yüzden önce dışa aktarın (Geçmiş > Dışa aktar).
+v0.1.1 ve sonraki sürümler aynı debug anahtarıyla imzalanır. v0.1.0 farklı bir anahtar kullandığı için Android onu güncellemez: önce v0.1.0'ı kaldırın. Kaldırmak uygulamanın geçmişini siler, bu yüzden önce dışa aktarın (Geçmiş > Dışa aktar).
 
 ## Ekran görüntüleri
 
@@ -123,7 +123,7 @@ Manifest'teki izinler:
 - `INTERNET`: her ağ bağlantısı için gerekir; burada yalnızca TV'ye TCP üzerinden ADB ve isteğe bağlı tarama için kullanılır.
 - `ACCESS_NETWORK_STATE`: taramanın hangi alt ağa bakacağını bilmesi için telefonun kendi Wi-Fi adresini okur.
 
-v0.1.0 ayrıca kullanmadığı `ACCESS_WIFI_STATE` iznini de bildirir. Bu izin bir sonraki sürümde kaldırılıyor.
+v0.1.0 ayrıca kullanmadığı `ACCESS_WIFI_STATE` iznini de bildiriyordu. Bu izin v0.1.1'de kaldırıldı.
 
 ## Sorumluluk reddi
 
@@ -142,7 +142,7 @@ JDK 17 gerekir. Gradle wrapper geri kalan her şeyi indirir.
 APK `app/build/outputs/apk/debug/` klasörüne çıkar.
 Bilgisayarınız yok mu? Depoyu fork'layın: GitHub Actions her push'ta APK'yı derler ve indirilebilir bir artifact olarak saklar.
 
-- `build.yml`: depo kontrolleri (`tools/repo_checks.py`), birim testleri, gizli bilgi taraması ve debug APK. `v0.1.0` gibi etiketler bir GitHub Release oluşturur.
+- `build.yml`: depo kontrolleri (`tools/repo_checks.py`), birim testleri, gizli bilgi taraması ve debug APK. `v0.1.1` gibi etiketler bir GitHub Release oluşturur.
 - `e2e.yml`: gerçek uygulamayı bir Android TV 9 emülatörüne karşı çalıştırır.
 - `docs-images.yml`: ekran görüntülerini, kapak görselini ve sosyal önizlemeyi üretir. Actions sekmesinden çalıştırın.
 

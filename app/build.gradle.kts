@@ -14,8 +14,21 @@ android {
         minSdk = 26
         targetSdk = 34
         versionCode = (System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 1)
-        // Tag builds set VERSION_NAME (v0.1.0 -> 0.1.0); other builds are marked as dev builds.
-        versionName = System.getenv("VERSION_NAME") ?: ("0.1.0-dev." + (System.getenv("GITHUB_RUN_NUMBER") ?: "0"))
+        // Tag builds set VERSION_NAME (v0.1.1 -> 0.1.1); other builds are dev builds of the next version.
+        versionName = System.getenv("VERSION_NAME") ?: ("0.1.2-dev." + (System.getenv("GITHUB_RUN_NUMBER") ?: "0"))
+    }
+
+    // CI sets DEBUG_KEYSTORE_FILE to the fixed repository debug key, so every release is signed with
+    // the same key and a newer APK installs over an older one. Without it, the usual local debug key is used.
+    signingConfigs {
+        getByName("debug") {
+            System.getenv("DEBUG_KEYSTORE_FILE")?.takeIf { it.isNotBlank() }?.let {
+                storeFile = file(it)
+                storePassword = "android"
+                keyAlias = "androiddebugkey"
+                keyPassword = "android"
+            }
+        }
     }
 
     buildTypes {
