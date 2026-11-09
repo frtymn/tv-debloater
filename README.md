@@ -1,5 +1,9 @@
 <p align="center"><b>English</b> | <a href="README.tr.md">Türkçe</a></p>
 
+<p align="center">
+  <img src="docs/social-preview.png" alt="TV Debloater: debloat your Android TV from your phone. No root. No computer. Reversible." width="100%">
+</p>
+
 # TV Debloater
 
 Disable preinstalled Android TV apps from your phone. No root, no computer, reversible.

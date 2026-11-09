@@ -1,5 +1,9 @@
 <p align="center"><a href="README.md">English</a> | <b>Türkçe</b></p>
 
+<p align="center">
+  <img src="docs/social-preview.png" alt="TV Debloater: Android TV cihazını telefonundan sadeleştir. Root yok. Bilgisayar yok. Geri alınabilir." width="100%">
+</p>
+
 # TV Debloater
 
 Android TV'deki hazır uygulamaları telefonunuzdan kapatın. Root yok, bilgisayar yok, geri alınabilir.
