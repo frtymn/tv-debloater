@@ -98,7 +98,7 @@ jobs:
           else
             git worktree add --detach "$wt"
             git -C "$wt" checkout --orphan db
-            git -C "$wt" rm -rq .
+            git -C "$wt" rm -rfq --quiet .
           fi
           mkdir -p "$wt/db"
           cp "$RUNNER_TEMP/out/db/packages.json" "$RUNNER_TEMP/out/db/manifest.json" "$wt/db/"
