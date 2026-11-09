@@ -29,7 +29,7 @@ data class DeviceInfo(val host: String, val port: Int, val model: String, val an
  * Thin wrapper around dadb (dev.mobile:dadb). One connection at a time, one command at a time.
  * The RSA key pair is generated once and kept in app-private storage (filesDir/adb).
  */
-class AdbManager(filesDir: File) {
+class AdbManager(filesDir: File, private val authTimeoutMs: Int = AUTH_SOCKET_TIMEOUT_MS) {
 
     private val keyDir = File(filesDir, "adb")
     private val privateKey = File(keyDir, "adbkey")
@@ -62,7 +62,7 @@ class AdbManager(filesDir: File) {
         withContext(Dispatchers.IO) {
             closeQuietly()
             val keys = try { keyPair() } catch (e: Exception) { throw AdbError(AdbErrorKind.OTHER, "Key error: ${e.message}", e) }
-            val d = Dadb.create(host, port, keys, CONNECT_TIMEOUT_MS, AUTH_SOCKET_TIMEOUT_MS)
+            val d = Dadb.create(host, port, keys, CONNECT_TIMEOUT_MS, authTimeoutMs)
             try {
                 val r = d.shell(com.frtymn.tvdebloater.core.CommandBuilder.DEVICE_INFO)
                 val lines = r.output.lines().map { it.trim() }
@@ -121,6 +121,6 @@ class AdbManager(filesDir: File) {
     companion object {
         const val DEFAULT_PORT = 5555
         private const val CONNECT_TIMEOUT_MS = 6_000
-        private const val AUTH_SOCKET_TIMEOUT_MS = 90_000
+        const val AUTH_SOCKET_TIMEOUT_MS = 90_000
     }
 }
