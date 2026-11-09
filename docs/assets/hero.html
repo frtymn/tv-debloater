@@ -17,11 +17,17 @@
 <body>
   <header>
     <div class="brand"><img src="icon.svg" alt=""><h1>TV Debloater</h1></div>
-    <p class="tag">Disable preinstalled Android TV apps from your phone. No root, no computer.</p>
+    <p class="tag" id="tag">Disable preinstalled Android TV apps from your phone. No root, no computer.</p>
   </header>
   <div class="row">
-    <div class="phone"><div class="screen"><img src="../screenshots/03-packages.png"></div></div>
-    <div class="phone mid"><div class="screen"><img src="../screenshots/04-confirm-dry-run.png"></div></div>
-    <div class="phone"><div class="screen"><img src="../screenshots/05-results.png"></div></div>
+    <div class="phone"><div class="screen"><img data-shot="03-packages"></div></div>
+    <div class="phone mid"><div class="screen"><img data-shot="04-confirm-dry-run"></div></div>
+    <div class="phone"><div class="screen"><img data-shot="05-results"></div></div>
   </div>
+  <script>
+    // hero.html = English, hero.html?lang=tr = Turkish screenshots and tagline.
+    const tr = new URLSearchParams(location.search).get("lang") === "tr";
+    if (tr) { document.documentElement.lang = "tr"; document.getElementById("tag").textContent = "Android TV'deki hazır uygulamaları telefonunuzdan kapatın. Root yok, bilgisayar yok."; }
+    for (const img of document.querySelectorAll("img[data-shot]")) img.src = "../screenshots/" + img.dataset.shot + (tr ? "-tr" : "") + ".png";
+  </script>
 </body></html>

@@ -68,6 +68,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -254,10 +255,10 @@ fun PackagesScreen(s: UiState, vm: MainViewModel) {
                 title = {
                     Column {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(stringResource(R.string.packages_title))
+                            Text(stringResource(R.string.packages_title), maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f, fill = false))
                             if (s.dryRun) { Spacer(Modifier.width(8.dp)); Badge(stringResource(R.string.dry_run_badge), CautionColor) }
                         }
-                        if (info != null) Text(stringResource(R.string.device_line, info.model, info.androidVersion, info.host), style = MaterialTheme.typography.bodySmall)
+                        if (info != null) Text(stringResource(R.string.device_line, info.model, info.androidVersion, info.host), style = MaterialTheme.typography.bodySmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
                     }
                 },
                 actions = {
@@ -276,25 +277,28 @@ fun PackagesScreen(s: UiState, vm: MainViewModel) {
         bottomBar = {
             if (s.selected.isNotEmpty()) {
                 Card(Modifier.fillMaxWidth().navigationBarsPadding(), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
-                    Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Column(Modifier.padding(horizontal = 12.dp, vertical = 6.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(stringResource(R.string.selected_count, s.selected.size), modifier = Modifier.weight(1f), style = MaterialTheme.typography.titleMedium)
                             TextButton(onClick = vm::clearSelection) { Text(stringResource(R.string.clear)) }
                         }
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Button(onClick = { vm.planChange(PkgAction.DISABLE) }, enabled = canDisable, modifier = BigButton.weight(1f)) {
-                                Text(stringResource(R.string.action_disable))
+                            Button(onClick = { vm.planChange(PkgAction.DISABLE) }, enabled = canDisable, modifier = BigButton.weight(1f), contentPadding = BarButtonPadding) {
+                                Text(stringResource(R.string.action_disable), maxLines = 2, textAlign = TextAlign.Center)
                             }
                             if (canRestore) {
-                                OutlinedButton(onClick = vm::planRestoreSelected, modifier = BigButton.weight(1f)) { Text(stringResource(R.string.action_restore)) }
+                                OutlinedButton(onClick = vm::planRestoreSelected, modifier = BigButton.weight(1f), contentPadding = BarButtonPadding) {
+                                    Text(stringResource(R.string.action_restore), maxLines = 2, textAlign = TextAlign.Center)
+                                }
                             }
+                            OutlinedButton(
+                                onClick = { vm.planChange(PkgAction.UNINSTALL_USER) },
+                                enabled = selectedItems.any { it.state != PkgState.UNINSTALLED },
+                                modifier = BigButton.weight(1f),
+                                contentPadding = BarButtonPadding,
+                                colors = ButtonDefaults.outlinedButtonColors(contentColor = ProtectedColor),
+                            ) { Text(stringResource(R.string.action_remove), maxLines = 2, textAlign = TextAlign.Center) }
                         }
-                        OutlinedButton(
-                            onClick = { vm.planChange(PkgAction.UNINSTALL_USER) },
-                            enabled = selectedItems.any { it.state != PkgState.UNINSTALLED },
-                            modifier = BigButton.fillMaxWidth(),
-                            colors = ButtonDefaults.outlinedButtonColors(contentColor = ProtectedColor),
-                        ) { Text(stringResource(R.string.action_remove)) }
                     }
                 }
             }
@@ -579,7 +583,7 @@ private fun BatchCard(b: Batch, vm: MainViewModel) {
         Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             Row(Modifier.clickable { open = !open }, verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
-                    Text("$kind · ${b.action.name}", style = MaterialTheme.typography.titleMedium)
+                    Text("$kind · ${actionName(b.action)}", style = MaterialTheme.typography.titleMedium)
                     Text(DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date(b.timestamp)), style = MaterialTheme.typography.bodySmall)
                     Text("${b.device} · ${stringResource(R.string.summary, ok, bad)}", style = MaterialTheme.typography.bodySmall)
                 }
@@ -649,3 +653,15 @@ fun SettingsScreen(s: UiState, vm: MainViewModel) {
         }
     }
 }
+
+@Composable
+private fun actionName(a: PkgAction): String = stringResource(
+    when (a) {
+        PkgAction.DISABLE -> R.string.action_disable
+        PkgAction.UNINSTALL_USER -> R.string.action_remove
+        PkgAction.ENABLE -> R.string.act_enable
+        PkgAction.INSTALL_EXISTING -> R.string.act_install_existing
+    },
+)
+
+private val BarButtonPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 8.dp, vertical = 8.dp)

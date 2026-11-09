@@ -29,7 +29,7 @@ fun formatDiff(kb: Long): String = (if (kb >= 0) "+" else "-") + formatKb(abs(kb
 @Composable
 fun Badge(text: String, color: Color) {
     Text(
-        text, color = Color.Black, fontSize = 11.sp, fontWeight = FontWeight.Bold,
+        text, color = Color.Black, fontSize = 11.sp, fontWeight = FontWeight.Bold, maxLines = 1, softWrap = false,
         modifier = Modifier.background(color, RoundedCornerShape(6.dp)).padding(horizontal = 6.dp, vertical = 2.dp),
     )
 }

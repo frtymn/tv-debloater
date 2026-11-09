@@ -64,7 +64,7 @@ jobs:
           npm install --no-save --no-package-lock playwright@1
           npx playwright install --with-deps chromium
           node docs/assets/render.mjs
-          python3 tools/optimize_png.py docs/hero.png docs/social-preview.png
+          python3 tools/optimize_png.py docs/hero.png docs/hero-tr.png docs/social-preview.png
           python3 tools/check_images.py
 
       - name: Upload images
@@ -74,6 +74,7 @@ jobs:
           path: |
             docs/screenshots/*.png
             docs/hero.png
+            docs/hero-tr.png
             docs/social-preview.png
 
       - name: Commit images
@@ -81,7 +82,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/screenshots docs/hero.png docs/social-preview.png
+          git add docs/screenshots docs/hero.png docs/hero-tr.png docs/social-preview.png
           if git diff --cached --quiet; then echo "Images unchanged"; exit 0; fi
           git commit -m "Docs: re-render screenshots, hero and social preview"
           git push

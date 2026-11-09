@@ -80,6 +80,8 @@
     <string name="demo_title">Demo verisi (debug sürümü)</string>
     <string name="demo_text">Uygulamayı örnek verilerle doldurur, böylece her ekranı TV olmadan deneyebilirsiniz. Hiçbir cihaza komut gönderilmez. Demo modundan çıkmak için bağlantıyı kesin.</string>
     <string name="demo_load">Demo verisini yükle</string>
+    <string name="act_enable">Etkinleştir</string>
+    <string name="act_install_existing">Kullanıcıya geri yükle</string>
     <string name="menu">Menü</string>
     <string name="history">Geçmiş</string>
     <string name="settings">Ayarlar</string>

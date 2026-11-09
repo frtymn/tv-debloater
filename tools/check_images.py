@@ -9,7 +9,7 @@ def dims(path):
     return struct.unpack(">II", head[16:24])
 
 rules = [(p, (1080, 2400), 400) for p in sorted(glob.glob("docs/screenshots/*.png"))]
-rules += [("docs/hero.png", (1600, 1000), 1200), ("docs/social-preview.png", (1280, 640), 1000)]
+rules += [("docs/hero.png", (1600, 1000), 1200), ("docs/hero-tr.png", (1600, 1000), 1200), ("docs/social-preview.png", (1280, 640), 1000)]
 bad = 0
 for path, want, max_kb in rules:
     w, h = dims(path)

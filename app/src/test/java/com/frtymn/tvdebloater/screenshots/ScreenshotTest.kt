@@ -47,13 +47,14 @@ abstract class ScreenshotBase(private val suffix: String, private val locale: Lo
         captureScreenRoboImage("build/screenshots/$name$suffix.png")
     }
 
-    @Test fun s1_onboarding() = shoot("01-onboarding") { vm -> vm.demoArrange { it.copy(screen = Screen.ONBOARDING) } }
+    @Test fun s1_onboarding() = shoot("01-onboarding") { vm -> vm.demoArrange { it.copy(screen = Screen.ONBOARDING, onboardingDone = false) } }
 
     @Test fun s2_connect() = shoot("02-connect") { vm -> vm.demoArrange { it.copy(screen = Screen.CONNECT, conn = ConnState.Idle) } }
 
     @Test fun s3_packages() = shoot("03-packages") { vm ->
         vm.demoArrange { it.copy(dryRun = true) }
-        vm.applyLightProfile()
+        vm.toggle("com.google.android.tv.bugreportsender")
+        vm.toggle("com.google.android.feedback")
     }
 
     @Test fun s4_confirm() = shoot("04-confirm-dry-run") { vm ->

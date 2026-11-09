@@ -7,12 +7,14 @@ import { fileURLToPath } from "node:url";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const jobs = [
   { html: "hero.html", out: "../hero.png", width: 1600, height: 1000 },
+  { html: "hero.html?lang=tr", out: "../hero-tr.png", width: 1600, height: 1000 },
   { html: "social-preview.html", out: "../social-preview.png", width: 1280, height: 640 },
 ];
 const browser = await chromium.launch();
 for (const j of jobs) {
   const page = await browser.newPage({ viewport: { width: j.width, height: j.height }, deviceScaleFactor: 1 });
-  await page.goto("file://" + path.join(here, j.html));
+  const [file, query] = j.html.split("?");
+  await page.goto("file://" + path.join(here, file) + (query ? "?" + query : ""));
   await page.evaluate(() => document.fonts.ready);
   await page.waitForLoadState("networkidle");
   const broken = await page.evaluate(() => [...document.images].filter((i) => !i.complete || i.naturalWidth === 0).map((i) => i.src));

@@ -14,7 +14,8 @@ android {
         minSdk = 26
         targetSdk = 34
         versionCode = (System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 1)
-        versionName = "1.0." + (System.getenv("GITHUB_RUN_NUMBER") ?: "0")
+        // Tag builds set VERSION_NAME (v0.1.0 -> 0.1.0); other builds are marked as dev builds.
+        versionName = System.getenv("VERSION_NAME") ?: ("0.1.0-dev." + (System.getenv("GITHUB_RUN_NUMBER") ?: "0"))
     }
 
     buildTypes {

@@ -2,6 +2,9 @@ name: Build debug APK
 
 on:
   push:
+    branches: ["**"]
+    tags: ["v*"]
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -18,6 +21,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Set up JDK 17
         uses: actions/setup-java@v6
@@ -27,6 +32,28 @@ jobs:
 
       - name: Set up Gradle (also validates the wrapper)
         uses: gradle/actions/setup-gradle@v6
+
+      - name: Version name
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then echo "VERSION_NAME=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"; fi
+
+      - name: Secret scan (gitleaks, full history)
+        run: |
+          curl -sSfL https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz | tar xz gitleaks
+          ./gitleaks git --no-banner --redact -v .
+          rm gitleaks
+
+      # A fixed debug key (repository secret) so a newer APK installs over an older one.
+      # Without the secret (for example in forks), Gradle makes a new debug key as usual.
+      - name: Debug signing key
+        env:
+          DEBUG_KEYSTORE_B64: ${{ secrets.DEBUG_KEYSTORE_B64 }}
+        run: |
+          if [ -n "$DEBUG_KEYSTORE_B64" ]; then
+            mkdir -p ~/.android && echo "$DEBUG_KEYSTORE_B64" | base64 -d > ~/.android/debug.keystore && echo "Using the repository debug key"
+          else
+            echo "No DEBUG_KEYSTORE_B64 secret: using a temporary debug key"
+          fi
 
       - name: Unit tests
         run: |
@@ -40,7 +67,7 @@ jobs:
         run: |
           mkdir -p out
           cp app/build/outputs/apk/debug/app-debug.apk out/tv-debloater-debug.apk
-          sha256sum out/tv-debloater-debug.apk | tee out/tv-debloater-debug.apk.sha256
+          (cd out && sha256sum tv-debloater-debug.apk | tee tv-debloater-debug.apk.sha256)
 
       - name: Upload test reports
         if: always()
@@ -57,18 +84,15 @@ jobs:
           path: out/
           if-no-files-found: error
 
+      # Releases are made only from version tags (v0.1.0, ...). Notes come from docs/release-notes/<tag>.md.
       - name: Publish GitHub Release
-        if: github.ref == 'refs/heads/main'
+        if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: v1.0.${{ github.run_number }}
-          name: TV Debloater 1.0.${{ github.run_number }} (debug)
-          target_commitish: ${{ github.sha }}
+          tag_name: ${{ github.ref_name }}
+          name: TV Debloater ${{ github.ref_name }} (beta)
+          body_path: docs/release-notes/${{ github.ref_name }}.md
           make_latest: "true"
-          body: |
-            Debug APK built from ${{ github.sha }}.
-            Download `tv-debloater-debug.apk` below and open it on your phone.
-            Hata ayıklama APK'sı. Aşağıdaki `tv-debloater-debug.apk` dosyasını telefonunuza indirip açın.
           files: |
             out/tv-debloater-debug.apk
             out/tv-debloater-debug.apk.sha256

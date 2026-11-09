@@ -1,0 +1,38 @@
+name: Package safety report
+description: A package is classified wrong, or you want to add a package to the database.
+labels: [package-safety]
+body:
+  - type: input
+    id: package
+    attributes:
+      label: Package name
+      placeholder: "com.example.package"
+    validations:
+      required: true
+  - type: dropdown
+    id: current
+    attributes:
+      label: Current level in the app
+      options: [SAFE, CAUTION, PROTECTED, Unknown]
+    validations:
+      required: true
+  - type: dropdown
+    id: proposed
+    attributes:
+      label: Proposed level
+      options: [SAFE, CAUTION, PROTECTED]
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: TV model, firmware and Android version
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: What happened when the package was disabled (or why it must stay enabled)? Link sources if you have them. SAFE needs evidence.
+    validations:
+      required: true
