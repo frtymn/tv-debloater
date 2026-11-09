@@ -77,6 +77,7 @@
     <string name="stats_unknown">RAM/depolama: okunamadı</string>
     <string name="dry_run_badge">DENEME</string>
     <string name="dry_run_on_hint">Deneme modu AÇIK: komutlar yalnızca gösterilir, TV\'de hiçbir şey değişmez. Ayarlar\'dan kapatabilirsiniz.</string>
+    <string name="menu">Menü</string>
     <string name="history">Geçmiş</string>
     <string name="settings">Ayarlar</string>
     <string name="disconnect">Bağlantıyı kes</string>

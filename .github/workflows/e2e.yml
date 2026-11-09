@@ -37,7 +37,7 @@ jobs:
           target: android-tv
           arch: x86
           force-avd-creation: true
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          emulator-options: -skin 720x1440 -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
           disable-animations: true
           script: bash tools/ci_e2e.sh
 

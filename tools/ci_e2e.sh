@@ -16,21 +16,12 @@ if grep -q '<failure\|<skipped' app/build/test-results/testDebugUnitTest/TEST-co
   exit 1
 fi
 
-# 2) UI smoke test: install, launch, screenshot, make sure it does not crash.
+# 2) UI flow test: install and drive the real app against the emulator's own adbd.
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 adb logcat -c
-adb shell am start -W -n com.frtymn.tvdebloater/.MainActivity
-sleep 6
-adb exec-out screencap -p > out/01-onboarding.png
-python3 tools/ui_tap.py "I did this, continue" || python3 tools/ui_tap.py "Yaptım, devam et" || true
-sleep 3
-adb exec-out screencap -p > out/02-connect.png
-python3 tools/ui_tap.py "Settings" desc || true
-sleep 3
-adb exec-out screencap -p > out/03-settings.png
+python3 tools/ui_flow.py
 adb logcat -d > out/logcat.txt
-if grep -E "FATAL EXCEPTION|AndroidRuntime: Process: com.frtymn.tvdebloater" out/logcat.txt; then
+if grep -E "FATAL EXCEPTION" out/logcat.txt; then
   echo "App crashed"; exit 1
 fi
-adb shell pidof com.frtymn.tvdebloater
-echo "UI smoke OK"
+echo "UI flow OK"

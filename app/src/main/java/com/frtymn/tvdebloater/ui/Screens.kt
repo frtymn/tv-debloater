@@ -22,6 +22,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
+import androidx.compose.ui.semantics.Role
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -260,7 +262,7 @@ fun PackagesScreen(s: UiState, vm: MainViewModel) {
                 },
                 actions = {
                     IconButton(onClick = vm::refreshPackages) { Icon(Icons.Default.Refresh, stringResource(R.string.refresh)) }
-                    IconButton(onClick = { menu = true }) { Icon(Icons.Default.MoreVert, null) }
+                    IconButton(onClick = { menu = true }) { Icon(Icons.Default.MoreVert, stringResource(R.string.menu)) }
                     DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
                         DropdownMenuItem(text = { Text(stringResource(R.string.history)) }, onClick = { menu = false; vm.go(Screen.HISTORY) })
                         DropdownMenuItem(text = { Text(stringResource(R.string.panic)) }, onClick = { menu = false; vm.planPanic() })
@@ -620,12 +622,16 @@ fun SettingsScreen(s: UiState, vm: MainViewModel) {
     Scaffold(topBar = { BackTopBar(stringResource(R.string.settings), onBack = { vm.back() }) }) { pad ->
         Column(Modifier.padding(pad).fillMaxSize().verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Card(Modifier.fillMaxWidth()) {
-                Row(Modifier.padding(16.dp).heightIn(min = 52.dp), verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    Modifier.toggleable(value = s.dryRun, role = Role.Switch, onValueChange = { vm.setDryRun(it) })
+                        .padding(16.dp).heightIn(min = 52.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
                     Column(Modifier.weight(1f)) {
                         Text(stringResource(R.string.dry_run), style = MaterialTheme.typography.titleMedium)
                         Text(stringResource(R.string.dry_run_desc), style = MaterialTheme.typography.bodySmall)
                     }
-                    Switch(checked = s.dryRun, onCheckedChange = { vm.setDryRun(it) })
+                    Switch(checked = s.dryRun, onCheckedChange = null)
                 }
             }
             Text(stringResource(R.string.language_note))
